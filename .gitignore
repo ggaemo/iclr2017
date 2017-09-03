@@ -1,0 +1,5 @@
+summary/
+log/
+MNIST_data/
+*.xml
+.idea/
