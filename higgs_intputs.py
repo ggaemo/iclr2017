@@ -1,6 +1,7 @@
 import pickle
 import tensorflow as tf
-import os, json, re, itertools, collections
+import os
+import pandas as pd
 import numpy as np
 
 def _bytes_feature(value):
@@ -10,31 +11,32 @@ def _int64_feature(value):
     return tf.train.Feature(int64_list=tf.train.Int64List(value=[value]))
 
 def _float_feature(value):
-    return tf.train.Feature(int64_list=tf.train.FloatList(value=[value]))
+    return tf.train.Feature(float_list=tf.train.FloatList(value=value.flatten().tolist()))
 
-def make_example(image, label):
+def make_example(feature, label):
+    feature = feature.tostring()
 
-    image = image.tostring()
     ex = tf.train.Example(features=tf.train.Features(feature={
-        'image': _bytes_feature(image),
-        'label': _int64_feature(label)}))
+        'feature': _bytes_feature(feature),
+        'label': _int64_feature(label.astype(int))
+        }))
+
     return ex
 
 def make_tfrecords():
-    for i in [1,2,3,4,5, 'test']:
-        filename = 'cifar-10_data/cifar-10_{}.tfrecords'.format(i)
-        if os.path.exists(filename):
-            print(filename, 'exists')
-            continue
-        else:
-            with open('cifar-10_data/data_batch_{}'.format(i), 'rb') as f:
-                pickled_data = pickle.load(f, encoding='bytes')
+    if os.path.exists('higgs_data/higgs_train.tfrecords'):
+        print('higgs data.tfrecords exists')
+    else:
+        for data_type in ['train', 'test']:
+            data = pd.read_hdf('higgs_data/HIGGS_{}.h5'.format(data_type), data_columns = False)
+            filename = 'higgs_data/higgs_{}.tfrecords'.format(data_type)
 
             writer = tf.python_io.TFRecordWriter(filename)
 
-            for image, label in zip(pickled_data[b'data'], pickled_data[\
-                    b'labels']):
-                ex = make_example(image, label)
+            for row in data.values:
+                feature = row[1:22]
+                label = row[0]
+                ex = make_example(feature, label)
                 writer.write(ex.SerializeToString())
             writer.close()
             print('tfrecord made')
@@ -44,7 +46,7 @@ def read_and_decode(filename_queue):
     print('Reading and Decoding')
     reader = tf.TFRecordReader()
     _, serialized_example = reader.read(filename_queue)
-    features =  {'image' : tf.FixedLenFeature([], tf.string),
+    features =  {'feature' : tf.FixedLenFeature([], tf.string),
                  'label' : tf.FixedLenFeature([], tf.int64)}
 
     data_parsed = tf.parse_single_example(
@@ -52,29 +54,24 @@ def read_and_decode(filename_queue):
         features=features
         )
 
-    image = tf.decode_raw(data_parsed['image'], tf.uint8)
-    image.set_shape([32 * 32 * 3])
-
-    image = tf.cast(image, tf.float32) * (1. / 255) - 0.5
-
     label = tf.cast(data_parsed['label'], tf.int32)
 
-    data_dict = {'image' : image, 'label' : label}
+    feature = tf.cast(tf.decode_raw(data_parsed['feature'], tf.float64), tf.float32)
+
+    feature.set_shape([21])
+
+    data_dict = {'feature' : feature, 'label' : label}
+
     return data_dict
 
 
 def inputs(data_type, batch_size, num_epochs, num_threads=1):
 
-    if data_type == 'train':
-        filename = list()
-        for i in [1,2,3,4,5]:
-            filename.append('cifar-10_data/cifar-10_{}.tfrecords'.format(i))
-    elif data_type == 'test':
-        filename = ['cifar-10_data/cifar-10_test.tfrecords']
+    filename = ['higgs_data/higgs_{}.tfrecords'.format(data_type)]
     filename_queue = tf.train.string_input_producer(filename, num_epochs)
     reader_output = read_and_decode(filename_queue)
 
-    batch = tf.train.batch([reader_output['image'],
+    batch = tf.train.batch([reader_output['feature'],
                             reader_output['label']
                             ],
                              batch_size, allow_smaller_final_batch=False,
@@ -84,7 +81,7 @@ def inputs(data_type, batch_size, num_epochs, num_threads=1):
 
 def test():
     make_tfrecords()
-    input_data_stream = inputs('train', 128, 10)
+    input_data_stream = inputs('test', 128, 10)
 
     sess = tf.Session()
     sess.run(tf.global_variables_initializer())
@@ -93,9 +90,8 @@ def test():
     threads = tf.train.start_queue_runners(sess, coord)
     try:
         while not coord.should_stop():
-            a, b = sess.run(input_data_stream)
+            a = sess.run(input_data_stream)
             print(a)
-            print(b)
     except tf.errors.OutOfRangeError:
         print('Done training -- epoch limit reached')
     finally:
@@ -103,7 +99,7 @@ def test():
 
     coord.join()
     sess.close()
-
 if __name__ == '__main__':
     test()
+
 make_tfrecords()

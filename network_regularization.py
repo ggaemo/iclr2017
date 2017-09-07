@@ -6,8 +6,6 @@ import logging
 import tensorflow as tf
 
 from tensorflow.examples.tutorials.mnist import input_data
-from tensorflow.python.ops import gen_math_ops
-
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-b', help = 'batch size', default=256, type=int)
@@ -15,8 +13,8 @@ parser.add_argument('-n', help = 'number of epochs', default=10000, type=int)
 parser.add_argument('-reg', help = 'regularization type', type=str)
 parser.add_argument('-np', help = 'reg NN output partition per layer', type=int, nargs='+')
 parser.add_argument('-no', help = 'reg NN output dimension per layer', type=int, nargs='+')
-parser.add_argument('-bn', help = 'batch normalization in fully_connected',
-                    action='store_true')
+parser.add_argument('-reg_w', help = 'regularzation loss weight(lambda)', type=float)
+parser.add_argument('-bn', help = 'batch normalization in fully_connected', action='store_true')
 
 def get_logger(model_config):
     logger = logging.getLogger(__name__)
@@ -67,8 +65,7 @@ class SimpleModel():
         # tf.summary.histogram('activation', tf.cast(tf.equal(layer_1, 0.0),tf.float32))
         zeros = tf.zeros_like(layer_1, dtype=tf.float32)
         tf.summary.histogram('activation',
-                             tf.cast(gen_math_ops.approximate_equal(layer_1, zeros, 1e-4),
-                                     tf.float32))
+                             tf.cast(tf.greater(layer_1, 0.0), tf.int32))
 
         tf.summary.histogram('output_layer', output_layer)
         tf.summary.scalar('xent_loss', self.loss)
@@ -77,7 +74,7 @@ class SimpleModel():
 
 class RegPartModel():
     def __init__(self, inputs, num_partition_by_layer, num_outputs_by_layer,
-                 is_training, is_bn, target, reg_type):
+                 is_training, is_bn, target, reg_type, reg_weight):
 
         def fully_connected_bn(layer_input, num_outputs):
             layer = tf.contrib.layers.fully_connected(layer_input, num_outputs)
@@ -121,8 +118,9 @@ class RegPartModel():
         def reg_loss_orthogonal(layer_list):
             reg_loss = 0
             for i, j in itertools.combinations(layer_list, 2):
-                reg_loss += tf.sqrt(tf.reduce_mean(tf.square(tf.multiply(i, j))))
+                reg_loss += tf.sqrt(tf.reduce_mean((tf.square(tf.multiply(i, j)))))
             return reg_loss
+
 
         layer_list = list()
         layer_list.append(inputs)
@@ -137,8 +135,10 @@ class RegPartModel():
             for idx, partitioned_layer in enumerate(layer):
                 tf.summary.histogram('layer_{}_partition_{}'.format(layer_num, idx),
                                      partitioned_layer)
-                activation = tf.cast(tf.greater(layer, 0.0), tf.int32)
-                tf.summary.histogram('layer_{}_partition_{}_activation'.format(
+                activation = tf.reduce_mean(tf.reduce_mean(tf.cast(tf.greater(layer, 0.0),
+                                                         tf.float32),
+                                            axis=1))
+                tf.summary.scalar('layer_{}_partition_{}_activation_ratio'.format(
                     layer_num, idx), activation)
 
             if reg_type == 'dotProduct':
@@ -148,14 +148,15 @@ class RegPartModel():
             elif reg_type == 'dotProductHuber':
                 reg_loss_list.append(reg_loss_dot_huber(layer))
             else:
-                raise AttributeError('unidentified regularzation method')
+                print('nos loss')
+                # raise AttributeError('unidentified regularzation method')
 
             layer_concat = tf.concat(layer, axis=1)
             layer_list.append(layer_concat)
 
         output_layer = tf.contrib.layers.fully_connected(layer_list[-1],num_outputs=10)
 
-        self.reg_loss = tf.reduce_mean(reg_loss_list)
+        self.reg_loss = tf.reduce_mean(reg_loss_list) * reg_weight
         self.xent_loss = tf.losses.softmax_cross_entropy(target, output_layer)
         self.loss =  self.xent_loss + self.reg_loss
 
@@ -181,14 +182,15 @@ num_partition_by_layer = args.np
 reg_num_output_by_layer = args.no
 is_bn = args.bn
 reg_type = args.reg
-
+reg_weight = args.reg_w
 # model_config = {'regType' : 'simpleModel',
 #                 'simpleModel' : '{}'.format(simple_num_output)}
 
 model_config = {'regType' : reg_type,
                 'regModel' : '{0}_{1}'.format(num_partition_by_layer,
                                               reg_num_output_by_layer),
-                'fc_bn' : is_bn}
+                'fc_bn' : is_bn,
+                'reg_weight' : reg_weight}
 
 logger, model_dir = get_logger(model_config)
 
@@ -197,7 +199,7 @@ logger, model_dir = get_logger(model_config)
 
 with tf.variable_scope('reg_model'):
     reg_model = RegPartModel(inputs, num_partition_by_layer, reg_num_output_by_layer,
-                             is_training, is_bn, target, reg_type)
+                             is_training, is_bn, target, reg_type, reg_weight)
 
 with tf.Session() as sess:
     tf.set_random_seed(1)
@@ -213,7 +215,7 @@ with tf.Session() as sess:
         sess.run(reg_model.train_op
                  , feed_dict={inputs :batch_x, target: batch_y, is_training : True})
 
-        if i % 100 == 0:
+        if i % 10 == 0:
             summary_val = sess.run(merged, feed_dict={inputs : mnist.test.images,
                                                       target: mnist.test.labels ,
                                                       is_training : False})

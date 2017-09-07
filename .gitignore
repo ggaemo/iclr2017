@@ -1,5 +1,9 @@
 summary/
 log/
 MNIST_data/
+cifar-10/
+cifar-10_data/
 *.xml
 .idea/
+higgs_data/
+higgs/
