@@ -1,145 +1,145 @@
 #!/usr/bin/env bash
-python train.py -np 2 2 2 -no 10 10 10 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 2 2 2 -no 10 10 10 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 2 2 2 -no 10 10 10 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 2 2 2 -no 10 10 10 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 2 2 2 -no 10 10 10 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 2 2 2 -no 10 10 10 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 2 2 2 -no 10 10 10 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 2 2 2 -no 10 10 10 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 2 2 2 -no 10 10 10 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 2 2 2 -no 10 10 50 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 2 2 2 -no 10 10 50 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 2 2 2 -no 10 10 50 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 2 2 2 -no 10 10 50 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 2 2 2 -no 10 10 50 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 2 2 2 -no 10 10 50 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 2 2 2 -no 10 10 50 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 2 2 2 -no 10 10 50 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 2 2 2 -no 10 10 50 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 2 2 2 -no 10 50 50 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 2 2 2 -no 10 50 50 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 2 2 2 -no 10 50 50 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 2 2 2 -no 10 50 50 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 2 2 2 -no 10 50 50 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 2 2 2 -no 10 50 50 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 2 2 2 -no 10 50 50 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 2 2 2 -no 10 50 50 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 2 2 2 -no 10 50 50 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 2 2 2 -no 50 50 50 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 2 2 2 -no 50 50 50 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 2 2 2 -no 50 50 50 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 2 2 2 -no 50 50 50 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 2 2 2 -no 50 50 50 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 2 2 2 -no 50 50 50 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 2 2 2 -no 50 50 50 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 2 2 2 -no 50 50 50 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 2 2 2 -no 50 50 50 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 2 2 3 -no 10 10 10 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 2 2 3 -no 10 10 10 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 2 2 3 -no 10 10 10 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 2 2 3 -no 10 10 10 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 2 2 3 -no 10 10 10 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 2 2 3 -no 10 10 10 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 2 2 3 -no 10 10 10 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 2 2 3 -no 10 10 10 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 2 2 3 -no 10 10 10 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 2 2 3 -no 10 10 50 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 2 2 3 -no 10 10 50 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 2 2 3 -no 10 10 50 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 2 2 3 -no 10 10 50 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 2 2 3 -no 10 10 50 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 2 2 3 -no 10 10 50 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 2 2 3 -no 10 10 50 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 2 2 3 -no 10 10 50 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 2 2 3 -no 10 10 50 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 2 2 3 -no 10 50 50 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 2 2 3 -no 10 50 50 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 2 2 3 -no 10 50 50 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 2 2 3 -no 10 50 50 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 2 2 3 -no 10 50 50 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 2 2 3 -no 10 50 50 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 2 2 3 -no 10 50 50 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 2 2 3 -no 10 50 50 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 2 2 3 -no 10 50 50 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 2 2 3 -no 50 50 50 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 2 2 3 -no 50 50 50 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 2 2 3 -no 50 50 50 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 2 2 3 -no 50 50 50 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 2 2 3 -no 50 50 50 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 2 2 3 -no 50 50 50 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 2 2 3 -no 50 50 50 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 2 2 3 -no 50 50 50 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 2 2 3 -no 50 50 50 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 2 3 3 -no 10 10 10 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 2 3 3 -no 10 10 10 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 2 3 3 -no 10 10 10 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 2 3 3 -no 10 10 10 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 2 3 3 -no 10 10 10 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 2 3 3 -no 10 10 10 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 2 3 3 -no 10 10 10 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 2 3 3 -no 10 10 10 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 2 3 3 -no 10 10 10 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 2 3 3 -no 10 10 50 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 2 3 3 -no 10 10 50 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 2 3 3 -no 10 10 50 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 2 3 3 -no 10 10 50 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 2 3 3 -no 10 10 50 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 2 3 3 -no 10 10 50 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 2 3 3 -no 10 10 50 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 2 3 3 -no 10 10 50 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 2 3 3 -no 10 10 50 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 2 3 3 -no 10 50 50 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 2 3 3 -no 10 50 50 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 2 3 3 -no 10 50 50 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 2 3 3 -no 10 50 50 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 2 3 3 -no 10 50 50 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 2 3 3 -no 10 50 50 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 2 3 3 -no 10 50 50 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 2 3 3 -no 10 50 50 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 2 3 3 -no 10 50 50 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 2 3 3 -no 50 50 50 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 2 3 3 -no 50 50 50 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 2 3 3 -no 50 50 50 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 2 3 3 -no 50 50 50 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 2 3 3 -no 50 50 50 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 2 3 3 -no 50 50 50 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 2 3 3 -no 50 50 50 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 2 3 3 -no 50 50 50 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 2 3 3 -no 50 50 50 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 3 3 3 -no 10 10 10 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 3 3 3 -no 10 10 10 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 3 3 3 -no 10 10 10 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 3 3 3 -no 10 10 10 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 3 3 3 -no 10 10 10 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 3 3 3 -no 10 10 10 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 3 3 3 -no 10 10 10 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 3 3 3 -no 10 10 10 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 3 3 3 -no 10 10 10 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 3 3 3 -no 10 10 50 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 3 3 3 -no 10 10 50 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 3 3 3 -no 10 10 50 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 3 3 3 -no 10 10 50 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 3 3 3 -no 10 10 50 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 3 3 3 -no 10 10 50 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 3 3 3 -no 10 10 50 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 3 3 3 -no 10 10 50 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 3 3 3 -no 10 10 50 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 3 3 3 -no 10 50 50 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 3 3 3 -no 10 50 50 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 3 3 3 -no 10 50 50 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 3 3 3 -no 10 50 50 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 3 3 3 -no 10 50 50 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 3 3 3 -no 10 50 50 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 3 3 3 -no 10 50 50 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 3 3 3 -no 10 50 50 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 3 3 3 -no 10 50 50 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 3 3 3 -no 50 50 50 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 3 3 3 -no 50 50 50 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 3 3 3 -no 50 50 50 -reg dotProductHuber -reg_w 1.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 3 3 3 -no 50 50 50 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 3 3 3 -no 50 50 50 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 3 3 3 -no 50 50 50 -reg dotProductHuber -reg_w 5.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
-python train.py -np 3 3 3 -no 50 50 50 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 2
-python train.py -np 3 3 3 -no 50 50 50 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 2
-python train.py -np 3 3 3 -no 50 50 50 -reg dotProductHuber -reg_w 10.0 -bn -data_dir higgs -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 2
+python train.py -b 256 -np 2 2 2 -no 10 10 10 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 2 -no 10 10 10 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 2 -no 10 10 10 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 2 -no 10 10 10 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 2 -no 10 10 10 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 2 -no 10 10 10 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 2 -no 10 10 10 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 2 -no 10 10 10 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 2 -no 10 10 10 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 2 -no 10 10 50 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 2 -no 10 10 50 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 2 -no 10 10 50 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 2 -no 10 10 50 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 2 -no 10 10 50 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 2 -no 10 10 50 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 2 -no 10 10 50 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 2 -no 10 10 50 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 2 -no 10 10 50 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 2 -no 10 50 50 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 2 -no 10 50 50 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 2 -no 10 50 50 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 2 -no 10 50 50 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 2 -no 10 50 50 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 2 -no 10 50 50 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 2 -no 10 50 50 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 2 -no 10 50 50 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 2 -no 10 50 50 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 2 -no 50 50 50 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 2 -no 50 50 50 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 2 -no 50 50 50 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 2 -no 50 50 50 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 2 -no 50 50 50 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 2 -no 50 50 50 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 2 -no 50 50 50 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 2 -no 50 50 50 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 2 -no 50 50 50 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 3 -no 10 10 10 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 3 -no 10 10 10 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 3 -no 10 10 10 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 3 -no 10 10 10 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 3 -no 10 10 10 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 3 -no 10 10 10 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 3 -no 10 10 10 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 3 -no 10 10 10 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 3 -no 10 10 10 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 3 -no 10 10 50 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 3 -no 10 10 50 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 3 -no 10 10 50 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 3 -no 10 10 50 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 3 -no 10 10 50 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 3 -no 10 10 50 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 3 -no 10 10 50 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 3 -no 10 10 50 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 3 -no 10 10 50 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 3 -no 10 50 50 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 3 -no 10 50 50 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 3 -no 10 50 50 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 3 -no 10 50 50 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 3 -no 10 50 50 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 3 -no 10 50 50 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 3 -no 10 50 50 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 3 -no 10 50 50 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 3 -no 10 50 50 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 3 -no 50 50 50 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 3 -no 50 50 50 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 3 -no 50 50 50 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 3 -no 50 50 50 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 3 -no 50 50 50 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 3 -no 50 50 50 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 3 -no 50 50 50 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 3 -no 50 50 50 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 2 3 -no 50 50 50 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 3 3 -no 10 10 10 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 3 3 -no 10 10 10 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 3 3 -no 10 10 10 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 3 3 -no 10 10 10 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 3 3 -no 10 10 10 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 3 3 -no 10 10 10 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 3 3 -no 10 10 10 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 3 3 -no 10 10 10 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 3 3 -no 10 10 10 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 3 3 -no 10 10 50 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 3 3 -no 10 10 50 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 3 3 -no 10 10 50 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 3 3 -no 10 10 50 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 3 3 -no 10 10 50 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 3 3 -no 10 10 50 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 3 3 -no 10 10 50 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 3 3 -no 10 10 50 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 3 3 -no 10 10 50 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 3 3 -no 10 50 50 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 3 3 -no 10 50 50 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 3 3 -no 10 50 50 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 3 3 -no 10 50 50 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 3 3 -no 10 50 50 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 3 3 -no 10 50 50 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 3 3 -no 10 50 50 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 3 3 -no 10 50 50 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 3 3 -no 10 50 50 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 3 3 -no 50 50 50 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 3 3 -no 50 50 50 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 3 3 -no 50 50 50 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 3 3 -no 50 50 50 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 3 3 -no 50 50 50 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 3 3 -no 50 50 50 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 3 3 -no 50 50 50 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 3 3 -no 50 50 50 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 2 3 3 -no 50 50 50 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 3 3 3 -no 10 10 10 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 3 3 3 -no 10 10 10 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 3 3 3 -no 10 10 10 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 3 3 3 -no 10 10 10 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 3 3 3 -no 10 10 10 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 3 3 3 -no 10 10 10 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 3 3 3 -no 10 10 10 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 3 3 3 -no 10 10 10 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 3 3 3 -no 10 10 10 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 3 3 3 -no 10 10 50 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 3 3 3 -no 10 10 50 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 3 3 3 -no 10 10 50 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 3 3 3 -no 10 10 50 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 3 3 3 -no 10 10 50 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 3 3 3 -no 10 10 50 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 3 3 3 -no 10 10 50 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 3 3 3 -no 10 10 50 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 3 3 3 -no 10 10 50 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 3 3 3 -no 10 50 50 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 3 3 3 -no 10 50 50 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 3 3 3 -no 10 50 50 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 3 3 3 -no 10 50 50 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 3 3 3 -no 10 50 50 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 3 3 3 -no 10 50 50 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 3 3 3 -no 10 50 50 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 3 3 3 -no 10 50 50 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 3 3 3 -no 10 50 50 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 3 3 3 -no 50 50 50 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 3 3 3 -no 50 50 50 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 3 3 3 -no 50 50 50 -reg DotHuber -reg_w 1.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 3 3 3 -no 50 50 50 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 3 3 3 -no 50 50 50 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 3 3 3 -no 50 50 50 -reg DotHuber -reg_w 5.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 3 3 3 -no 50 50 50 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 1.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 3 3 3 -no 50 50 50 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 5.0 -num_target_class 10 -num_cycle 196 -option attention
+python train.py -b 256 -np 3 3 3 -no 50 50 50 -reg DotHuber -reg_w 10.0 -bn -data_dir cifar-10 -test_data_size 10000 -test_batch_size 10000 -huber_delta 10.0 -num_target_class 10 -num_cycle 196 -option attention

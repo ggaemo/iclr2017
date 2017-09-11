@@ -30,14 +30,15 @@ def get_logger(data_dir, model_config):
 
 
 class RegPartModel():
-    def __init__(self, input_data, num_partition_by_layer, num_outputs_by_layer,
-                 is_training, is_bn, target, reg_type, reg_weight,
-                 num_target_class, huber_delta=1):
+    def __init__(self, reg_loss, num_partition_by_layer, num_outputs_by_layer,
+                 num_target_class,
+                 is_training, is_bn, input_data, target):
         self.global_step = tf.Variable(0, trainable=False, name='global_step')
 
         def fully_connected_bn(layer_input, num_outputs):
             layer = tf.contrib.layers.fully_connected(layer_input, num_outputs)
-            layer = tf.contrib.layers.batch_norm(layer, is_training = is_training)
+            layer = tf.contrib.layers.batch_norm(layer, is_training = is_training,
+                                                 fused=True)
             '''
             이런 방식으로 하는게 맞나..??? (is_training을 init에서 나온 scope에서 가져오독 하는것)
             '''
@@ -59,26 +60,20 @@ class RegPartModel():
 
             return partitioned_layer_list
 
-        def reg_loss_dot(layer_list):
-            reg_loss = 0
-            for i, j in itertools.combinations(layer_list, 2):
-                reg_loss += tf.reduce_mean(tf.multiply(i, j))
-            return reg_loss
+        def layer_attention(layer_list):
+            layer_output = list()
+            for layer in layer_list:
+                # layer_dim = layer.shape.as_list()[1]
+                attention = tf.contrib.layers.fully_connected(layer, 1,
+                                                            activation_fn=tf.sigmoid)
+                # attention = tf.contrib.layers.fully_connected(tmp, 1,
+                #                                               activation=tf.sigmoid)
+                # layer_output += layer * attention
+                layer_output.append(layer * attention)
+            layer_output = tf.concat(layer_output, axis=1)
+            return layer_output
 
-        def reg_loss_dot_huber(layer_list, threshold):
-            reg_loss = 0
-            # neg_ones = -tf.ones(layer_list.shape[0])
-            neg_ones = -tf.gather(tf.ones_like(layer_list[0]), 0, axis=1)
-            for i, j in itertools.combinations(layer_list, 2):
-                dot_prod = tf.reduce_mean(tf.multiply(i, j), axis=1)
-                reg_loss += tf.losses.huber_loss(neg_ones, dot_prod, delta=threshold)
-            return reg_loss
 
-        def reg_loss_orthogonal(layer_list):
-            reg_loss = 0
-            for i, j in itertools.combinations(layer_list, 2):
-                reg_loss += tf.sqrt(tf.reduce_mean((tf.square(tf.multiply(i, j)))))
-            return reg_loss
 
 
         layer_list = list()
@@ -94,29 +89,24 @@ class RegPartModel():
             for idx, partitioned_layer in enumerate(layer):
                 tf.summary.histogram('layer_{}_partition_{}'.format(layer_num, idx),
                                      partitioned_layer)
-                activation = tf.reduce_mean(tf.reduce_mean(tf.cast(tf.greater(layer, 0.0),
-                                                         tf.float32),
-                                            axis=1))
+                # activation = tf.reduce_mean(tf.reduce_mean(tf.cast(tf.greater(layer, 0.0),
+                #                                          tf.float32),axis=1))
+
+                activation = 1.0 - tf.nn.zero_fraction(layer)
                 tf.summary.scalar('layer_{}_partition_{}_activation_ratio'.format(
                     layer_num, idx), activation)
 
-            if reg_type == 'dotProduct':
-                reg_loss_list.append(reg_loss_dot(layer))
-            elif reg_type == 'dotOrthogonalProduct':
-                reg_loss_list.append(reg_loss_orthogonal(layer))
-            elif reg_type == 'dotProductHuber':
-                reg_loss_list.append(reg_loss_dot_huber(layer, huber_delta))
-            else:
-                print('nos loss')
-                # raise AttributeError('unidentified regularzation method')
 
-            layer_concat = tf.concat(layer, axis=1)
+            reg_loss_list.append(reg_loss.loss(layer))
+
+            # layer_concat = tf.concat(layer, axis=1)
+            layer_concat = layer_attention(layer)
             layer_list.append(layer_concat)
 
         output_layer = tf.contrib.layers.fully_connected(layer_list[-1],
                                                          num_outputs=num_target_class)
 
-        self.reg_loss = tf.reduce_mean(reg_loss_list) * reg_weight
+        self.reg_loss = tf.reduce_mean(reg_loss_list)
         self.xent_loss = tf.losses.sparse_softmax_cross_entropy(target, output_layer)
         self.loss =  self.xent_loss + self.reg_loss
 
