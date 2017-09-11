@@ -27,6 +27,8 @@ parser.add_argument('-num_target_class', help='number of classes in target', typ
 parser.add_argument('-num_cycle', help='number of cycles for each epoch', type=int)
 parser.add_argument('-option', help='optional specifications', type=str)
 
+parser.add_argument('-n_gpu', help='number of gpus', type=int, default=3)
+
 class MaxPatienceError(Exception):
     pass
 
@@ -47,6 +49,7 @@ huber_delta = args.huber_delta
 num_target_class = args.num_target_class
 option = args.option
 num_cycle = args.num_cycle
+num_gpu = args.n_gpu
 
 model_config = {'regType' : reg_type,
                 'regModel' : '{0}_{1}'.format(num_partition_by_layer,
@@ -79,13 +82,73 @@ elif reg_type == 'Orthogonal':
     reg_loss = regularization_losses.Orthogonal(reg_weight)
 
 
-with tf.name_scope('Train'):
-    train_inputs, train_targets = inputs('train', batch_size, num_epoch, 3)
-    with tf.variable_scope('Model', reuse=None):
+def average_gradients(tower_grads):
+  """Calculate the average gradient for each shared variable across all towers.
+  Note that this function provides a synchronization point across all towers.
+  Args:
+    tower_grads: List of lists of (gradient, variable) tuples. The outer list
+      is over individual gradients. The inner list is over the gradient
+      calculation for each tower.
+  Returns:
+     List of pairs of (gradient, variable) where the gradient has been averaged
+     across all towers.
+  """
+  average_grads = []
+  for grad_and_vars in zip(*tower_grads):
+    # Note that each grad_and_vars looks like the following:
+    #   ((grad0_gpu0, var0_gpu0), ... , (grad0_gpuN, var0_gpuN))
+    grads = []
+    for g, _ in grad_and_vars:
+      # Add 0 dimension to the gradients to represent the tower.
+      expanded_g = tf.expand_dims(g, 0)
 
-        trn_model = RegPartModel(reg_loss, num_partition_by_layer,
-                                 reg_num_output_by_layer, num_target_class,
-                                 True, is_bn, train_inputs, train_targets)
+      # Append on a 'tower' dimension which we will average over below.
+      grads.append(expanded_g)
+
+    # Average over the 'tower' dimension.
+    grad = tf.concat(axis=0, values=grads)
+    grad = tf.reduce_mean(grad, 0)
+
+    # Keep in mind that the Variables are redundant because they are shared
+    # across towers. So .. we will just return the first tower's pointer to
+    # the Variable.
+    v = grad_and_vars[0][1]
+    grad_and_var = (grad, v)
+    average_grads.append(grad_and_var)
+  return average_grads
+
+opt = tf.train.AdamOptimizer()
+
+grads_list = list()
+with tf.name_scope('Train'):
+    global_step = tf.get_variable(
+        'global_step', [],
+        initializer=tf.constant_initializer(0), trainable=False)
+
+
+    train_inputs, train_targets = inputs('train', batch_size, num_epoch, 3)
+
+    batch_queue = tf.contrib.slim.prefetch_queue.prefetch_queue(
+        [train_inputs, train_targets], capacity=2 * num_gpu)
+    for i in range(num_gpu):
+        with tf.device('/gpu:%d' % i):
+            with tf.variable_scope('Model'):
+                trn_model = RegPartModel(reg_loss, num_partition_by_layer,
+                                         reg_num_output_by_layer, num_target_class,
+                                         True, is_bn, train_inputs, train_targets)
+
+                tf.get_variable_scope().reuse_variables()
+                grads = opt.compute_gradients(trn_model.loss)
+                grads_list.append(grads)
+
+    grads = average_gradients(grads_list)
+    apply_gradient_op = opt.apply_gradients(grads, global_step=global_step)
+
+    update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
+    with tf.control_dependencies(update_ops):
+        apply_gradient_op = opt.apply_gradients(grads, global_step=global_step)
+
+
 
 with tf.name_scope('Test'):
     test_inputs, test_targets = inputs('test', batch_size, num_epoch, 3)
@@ -95,9 +158,9 @@ with tf.name_scope('Test'):
                                  False, is_bn, test_inputs, test_targets)
 
 
-with tf.Session() as sess:
-
-
+config=tf.ConfigProto(
+        allow_soft_placement=True)
+with tf.Session(config) as sess:
 
     tf.set_random_seed(1)
     merged = tf.summary.merge_all()
