@@ -78,7 +78,7 @@ def inputs(data_type, batch_size, num_epochs, num_threads=1):
                             reader_output['label']
                             ],
                              batch_size, allow_smaller_final_batch=False,
-                           capacity = batch_size * 2, num_threads=num_threads)
+                           capacity = batch_size * 5, num_threads=num_threads)
     return batch
 
 

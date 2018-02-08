@@ -90,3 +90,10 @@ mnist_args = {'data' : data, 'num_batch' : 256,'encoder_list' : encoder_list,
               : discriminator_list, 'option' : 'no_reg',
               'num_split' : num_split}
 make_script(**mnist_args)
+
+
+
+
+
+
+

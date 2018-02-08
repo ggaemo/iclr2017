@@ -76,16 +76,12 @@ def conv_block_discrim(input, filters, kernel_size, strides, padding, alpha, is_
     lrelu_output = tf.maximum(alpha * bn_output, bn_output)
     return lrelu_output
 
-def get_param(input, dim, deterministic, truncated):
+def get_param(input, dim, deterministic):
     mean = tf.contrib.layers.fully_connected(input, dim, activation_fn=None)
 
     if deterministic:
         log_sigma_sq = tf.zeros_like(mean)
         value = mean
-    elif truncated:
-        log_sigma_sq = tf.contrib.layers.fully_connected(input, dim,
-                                                         activation_fn=None)
-        value = mean + tf.sqrt(tf.exp(log_sigma_sq)) * tf.truncated_normal(tf.shape(log_sigma_sq))
     else:
         log_sigma_sq = tf.contrib.layers.fully_connected(input, dim,
                                                          activation_fn=None)

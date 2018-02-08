@@ -70,12 +70,14 @@ def inputs(data_type, batch_size, num_epochs, num_threads=1):
     filename = ['higgs_data/higgs_{}.tfrecords'.format(data_type)]
     filename_queue = tf.train.string_input_producer(filename, num_epochs)
     reader_output = read_and_decode(filename_queue)
-
-    batch = tf.train.batch([reader_output['feature'],
+    min_after_dequeue = 10000
+    capacity = min_after_dequeue + 3 * batch_size
+    batch = tf.train.shuffle_batch([reader_output['feature'],
                             reader_output['label']
                             ],
                              batch_size, allow_smaller_final_batch=False,
-                           capacity = batch_size * 2, num_threads=num_threads)
+                           capacity = capacity, min_after_dequeue=min_after_dequeue,
+                                   num_threads=3)
     return batch
 
 
