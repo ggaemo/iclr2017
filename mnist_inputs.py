@@ -25,11 +25,18 @@ def make_example(image, latent):
 def make_tfrecords_single():
 
     filename = 'mnist/data/mnist_aligned.tfrecords'
+    # filename = 'mnist/data/mnist_shuffled_y_not_matched.tfrecords'
+    # filename = 'mnist/data/mnist_shuffled_y_1.tfrecords'
+
+
+
 
     if os.path.exists(filename):
         print(filename, 'exists')
     else:
         data = np.load('mnist/data/mnist_aligned.npz')
+        # data = np.load('mnist/data/mnist_shuffled_y_1.npz')
+
 
         writer = tf.python_io.TFRecordWriter(filename)
         for image, latent in zip(data['img'], data['latent']):

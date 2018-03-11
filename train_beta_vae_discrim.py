@@ -27,7 +27,6 @@ parser.add_argument('-b', help = 'batch size has to be divisor of total batch fo
 parser.add_argument('-enc', type=int, nargs='+')
 
 parser.add_argument('-input_dim', type=int)
-parser.add_argument('-fc_dim', help = 'disentagled partition per layer', type=int)
 parser.add_argument('-z_dim', help = 'disentagled partition per layer', type=int)
 parser.add_argument('-final_act_fn', type=str)
 parser.add_argument('-output_prob', help='probability model of output', type=str)
@@ -72,7 +71,6 @@ batch_size = args.b
 input_dim = args.input_dim
 encoder_layer = args.enc
 z_dim = args.z_dim
-fc_dim = args.fc_dim
 beta_s = args.beta_s
 beta_c = args.beta_c
 output_prob = args.output_prob
@@ -98,29 +96,15 @@ restore = args.restore
 
 
 
-# for various encoder decoder models
-# model_config = {'model' : str(model_name),
-#                 'enc' : str(encoder_layer),
-#                 'fc_dim' : fc_dim,
-#                 'z_dim' : z_dim,
-#                 'beta': str(beta_s)+'_'+str(beta_c),
-#                 'dec': str(decoder_layer),
-#                 'optim' : optimizer,
-#                 'l_rate' : str(learning_rate),
-#                 'discrim' : str(discriminator_layer),
-#                 'alter' : str(alternate),
-#                 'style' : str(style_included),
-#                 'interval' : str(interval)
-#                 }
-
 model_config = {'model' : str(model_name),
                 'enc' : str(encoder_layer),
                 'dec' : str(decoder_layer),
-                'fc_dim' : fc_dim,
                 'z_dim' : z_dim,
                 'beta': str(beta_s)+'_'+str(beta_c),
                 'discrim' : str(discriminator_layer),
-                'classifier' : str(classifier_layer)
+                'classifier' : str(classifier_layer),
+                'optim': str(optimizer),
+                'perm' : str(perm_change)
                 }
 
 if option:
@@ -185,12 +169,18 @@ if model_name == 'CNN':
     tmp = [decoder_layer[i:i+3] for i in range(0, len(decoder_layer), 3)]
     decoder_layer = tmp
 
+tmp = [discriminator_layer[i:i+3] for i in range(0, len(discriminator_layer), 3)]
+discriminator_layer = tmp
+
+tmp = [classifier_layer[i:i+3] for i in range(0, len(classifier_layer), 3)]
+classifier_layer = tmp
+
 train_inputs, train_init_op = inputs(batch_size, 10)
 bn_phase = tf.placeholder(tf.bool)
 
 with tf.variable_scope('Model'):
     trn_model = model(
-        encoder_layer, decoder_layer, input_dim, fc_dim, z_dim,
+        encoder_layer, decoder_layer, input_dim, z_dim,
         bn_phase, batch_size, final_act_fn, beta_s, beta_c, output_prob,
         learning_rate, optimizer, discriminator_layer, classifier_layer,
         context_class_num, discrim_lambda, class_lambda, deterministic_c)
@@ -218,8 +208,8 @@ with tf.Session(config=config) as sess:
 
     best_loss = 1e4
     test_loss = np.array([1e4, 1e4, 1e4])
-    max_patience = 30
-    max_epoch = 50
+    max_patience = 2000
+    max_epoch = 1000
     patience = 0
 
     trn_eval = utils.Eval_discrim(trn_model, train_inputs, train_init_op, sess, logger,

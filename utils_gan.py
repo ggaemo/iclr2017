@@ -159,8 +159,6 @@ class Eval_discrim(Eval):
 
         permutation_c = np.concatenate([x for x in perm_dict.values()])
 
-        print('permutation_c:', permutation_c)
-
         perm_list = list()
 
         class_shuffle_val = next(self.class_shuffle)
@@ -169,8 +167,11 @@ class Eval_discrim(Eval):
             perm_list.append(perm_dict[class_idx])
 
         permutation_s = np.concatenate(perm_list)
-        print('permutation class shuffle:', class_shuffle_val)
-        print('permutation_s:', permutation_s)
+
+        # wgan 실험할때 씀
+        # permutation_c = np.concatenate([np.repeat([i * 2 , i * 2 + 1], int(self.model.batch_size / self.context_class_num / 2)) for i in
+        #                                 range(self.context_class_num)])
+        # permutation_s = permutation_c
 
         return permutation_c, permutation_s
 
@@ -214,57 +215,35 @@ class Eval_discrim(Eval):
         recon_loss = 1e4
         class_loss = 1e4
 
+        run_period = 1
+
+
         while True:
 
-            if count % self.perm_change == 0:
 
-                # perm0 = np.repeat(np.random.permutation([0, 1]), int(self.model.batch_size /
-                #                                                      3 /2))
-                # perm1 = np.repeat(np.random.permutation([2, 3]), int(self.model.batch_size /
-                #                                                      3 / 2))
-                # perm2 = np.repeat(np.random.permutation([4, 5]), int(self.model.batch_size /
-                #                                                      3 / 2))
-                #
-                # perm_dict = {0 : perm0,
-                #              1 : perm1,
-                #              2 : perm2}
-                #
-                # permutation_c = np.concatenate([perm0, perm1, perm2])
-                #
-                # print('permutation_c:', permutation_c)
-                #
-                # perm_list = list()
-                #
-                # class_shuffle_val = next(self.class_shuffle)
-                #
-                # for class_idx in class_shuffle_val:
-                #     perm_list.append(perm_dict[class_idx])
-                #
-                # permutation_s = np.concatenate(perm_list)
-                # print('permutation class shuffle:', class_shuffle_val)
-                # print('permutation_s:', permutation_s)
+            if count % self.perm_change == 0:
                 permutation_c, permutation_s = self._get_permutation()
 
-
-            run_period = 1
-            k = 1
 
 
             try:
                 inputs = self.sess.run(self.inputs)
                 input_data = inputs['img']
                 latent = inputs['latent']
-                sub_count = 0
 
-                # vae RECON
+                feed_dict = {self.model.is_training: True,
+                             self.model.permutation_s: permutation_s,
+                             self.model.permutation_c: permutation_c,
+                             self.model.input_data: input_data,
+                             self.model.latent: latent}
+
+                #vae RECON
                 sub_count = 0
                 while (True):
                     sub_count += 1
 
                     if sub_count == 2:
                         break
-                    # if sub_count % 50 == 0:
-                    #     permutation_s = _change_permutation_s(sub_count)
 
                     for _ in range(run_period):
                         _, recon_loss, dis_gen_loss, dis_ad_loss, class_loss, \
@@ -277,38 +256,19 @@ class Eval_discrim(Eval):
                                 self.model.discrim_adversarial_loss_g,
                                 self.model.classifier_loss,
                                 self.model.classifier_loss_gen],
-                                feed_dict={
-                                    self.model.is_training: True,
-                                    self.model.permutation_s: permutation_s,
-                                    self.model.permutation_c: permutation_c,
-                                    self.model.input_data: input_data,
-                                    self.model.latent: latent
-                                })
-
-
+                                feed_dict=feed_dict)
 
                 #classifier train
                 sub_count = 0
                 while (True):
                     sub_count += 1
-                    # if sub_count % 50 == 0:
-                    #     permutation_s = _change_permutation_s(sub_count)
 
                     if sub_count ==2 :
                         break
                     for _ in range(run_period):
                         _, class_loss = self.sess.run([self.model.train_op_classifier,
                                        self.model.classifier_loss],
-                                      feed_dict={
-                                          self.model.is_training: True,
-                                          self.model.permutation_s: permutation_s,
-                                          self.model.permutation_c: permutation_c,
-                            self.model.input_data:input_data,
-                            self.model.latent:latent
-                                      })
-                # _report('classifier_train')
-
-
+                                      feed_dict=feed_dict)
 
 
                 # vae classifier
@@ -319,9 +279,7 @@ class Eval_discrim(Eval):
 
                     if sub_count == 2:
                         break
-                    # if sub_count % 50 == 0:
-                    #     permutation_s = _change_permutation_s(sub_count)
-                    #
+
                     for _ in range(run_period):
                         _, recon_loss, dis_gen_loss, dis_ad_loss, class_loss, \
                         class_loss_gen\
@@ -333,73 +291,44 @@ class Eval_discrim(Eval):
                                 self.model.discrim_adversarial_loss_g,
                                 self.model.classifier_loss,
                                 self.model.classifier_loss_gen],
-                                feed_dict={
-                                    self.model.is_training: True,
-                                    self.model.permutation_s: permutation_s,
-                                    self.model.permutation_c: permutation_c,
-                                    self.model.input_data: input_data,
-                                    self.model.latent: latent
-                                })
+                                feed_dict=feed_dict)
 
-                # vae_discrim
+                '''
+                critic
+                '''
+
+                #w_discrim
+                sub_count = 0
+                while (True):
+                    sub_count += 1
+
+                    if sub_count == 6:
+                        break
+
+                    _, dis_gen_loss, dis_ad_loss = self.sess.run([
+                    self.model.train_op_w,
+                    self.model.discrim_generative_loss,
+                    self.model.discrim_adversarial_loss_g],
+                    feed_dict=feed_dict)
+
+
+
+                # w_gen
                 sub_count = 0
                 while (True):
                     sub_count += 1
 
                     if sub_count == 2:
                         break
-                    # if sub_count % 50 == 0:
-                    #     permutation_s = _change_permutation_s(sub_count)
-
-                    if dis_ad_loss < dis_gen_loss:
-                        _, dis_gen_loss, dis_ad_loss = \
-                            self.sess.run([
-                                self.model.train_op_gen,
-                                self.model.discrim_generative_loss,
-                                self.model.discrim_adversarial_loss_g],
-                                feed_dict={
-                                    self.model.is_training: True,
-                                    self.model.permutation_s: permutation_s,
-                                    self.model.permutation_c: permutation_c,
-                            self.model.input_data:input_data,
-                            self.model.latent:latent
-                                })
-                    else:
-                        _, dis_gen_loss, dis_ad_loss = self.sess.run(
-                            [self.model.train_op_adv_g,
-                             self.model.discrim_generative_loss,
-                             self.model.discrim_adversarial_loss_g
-                             ],
-                            feed_dict={
-                                self.model.is_training: True,
-                                self.model.permutation_s: permutation_s,
-                                self.model.permutation_c: permutation_c,
-                                self.model.input_data: input_data,
-                                self.model.latent: latent
-
-                            })
 
 
-                        _, dis_gen_loss, dis_ad_loss = self.sess.run(
-                            [self.model.train_op_adv_r,
-                             self.model.discrim_generative_loss,
-                             self.model.discrim_adversarial_loss_g
-                             ],
-                            feed_dict={
-                                self.model.is_training: True,
-                                self.model.permutation_s: permutation_s,
-                                self.model.permutation_c: permutation_c,
-                                self.model.input_data: input_data,
-                                self.model.latent: latent
-                            })
+                    _, dis_gen_loss, dis_ad_loss = self.sess.run([
+                        self.model.train_op_gen,
+                        self.model.discrim_generative_loss,
+                        self.model.discrim_adversarial_loss_g],
+                        feed_dict=feed_dict)
 
-                    # if sub_count % 100 == 0:
-                # _report('after_vae_recon_gen_class')
-
-
-
-                        # _report('after_vae_recon_gen_class')
-
+                class_loss_gen = 0
                 self.logger.info('whole cycle : recon {:.2f} d_g {:.2f} '
                                  'd_a {:.2f} c {:.2f} c_g {:.2f}'.format(recon_loss,
                                                          dis_gen_loss,
@@ -407,8 +336,6 @@ class Eval_discrim(Eval):
                                                          class_loss, class_loss_gen))
 
                 count += 1
-                # if input('hello') == 'yes':
-                #     break
 
             except tf.errors.OutOfRangeError:
                 self.logger.info('train out of range')
@@ -433,17 +360,17 @@ class Eval_discrim(Eval):
 
 
         permutation_c, permutation_s = self._get_permutation()
-
+        cnt = 0
         while True:
 
             # eval just range
-            coin = np.random.binomial(1, 0.01)
+            num = np.random.randint(1000)
             try:
                 inputs = self.sess.run(self.inputs)
                 input_data = inputs['img']
                 latent = inputs['latent']
 
-                if coin == 1:
+                if cnt == num:
                     fetch = [self.loss_update_op, self.model.image_summaries]
                     _, img_summary_val = self.sess.run(fetch, feed_dict={
                         self.model.is_training: False,
@@ -462,6 +389,7 @@ class Eval_discrim(Eval):
                                                     self.model.input_data: input_data,
                                                     self.model.latent: latent
                                                     })
+                cnt += 1
             except tf.errors.OutOfRangeError:
                 print('eval out of range')
                 break
@@ -471,7 +399,7 @@ class Eval_discrim(Eval):
         self.test_writer.add_summary(test_summary_val, global_step=epoch)
         self.test_writer.flush()
 
-        result = 'epoch {} | loss : recon {}, vae {}, latent_s {}, d_gen {}, d_adv {}, ' \
+        result = 'epoch {} | oss : recon {}, vae {}, latent_s {}, d_gen {}, d_adv {}, ' \
                  'd_recon_s_acc {}, d_recon_c_acc {}, d_input {}, c_input {}, c_recon_s ' \
                  '{}, c_input_acc ' \
                  '{} c_recon_s_acc {} c_recon_c_acc {}'.format(
