@@ -1,16 +1,16 @@
 
 
-import re
 import argparse
 import os
+import re
 import time
+
 import numpy as np
-import utils_gan as utils
 import tensorflow as tf
 
-from model import get_logger
-from proposed_model_gan import Disentagled_VAE_FC_Discrim, Disentagled_VAE_CNN_Discrim
-
+import utils_train_eval as utils
+from misc import get_logger
+from model import Disentagled_VAE_FC_Discrim, Disentagled_VAE_CNN_Discrim
 
 # tf.logging.set_verbosity(tf.logging.ERROR)
 tf.set_random_seed(0)
@@ -139,18 +139,15 @@ if 'checkpoint' in os.listdir(save_dir):
     else:
         raise ModelOverlapError('Already model exists but no restore flag')
 
-if data_dir == 'cifar-10':
-    import cifar_10_inputs
-    inputs = cifar_10_inputs.inputs
-elif data_dir == 'higgs':
+if data_dir == 'higgs':
     import higgs_intputs
     inputs = higgs_intputs.inputs
 elif data_dir =='mnist':
-    import mnist_inputs
+    from mnist import mnist_inputs
+
     inputs = mnist_inputs.inputs_single_file
 elif data_dir == 'dsprites':
-    import dsprites_inputs
-    # inputs = dsprite_inputs.inputs
+    from dsprite import dsprites_inputs
     print('single_file')
     inputs = dsprites_inputs.inputs_single_file
 

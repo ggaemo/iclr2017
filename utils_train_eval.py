@@ -5,15 +5,6 @@ import itertools
 import collections
 import numpy as np
 
-'''
-
-
-s permutation: all random
-c permutation: within class
-
-
-
-'''
 class MaxPatienceError(Exception):
     pass
 

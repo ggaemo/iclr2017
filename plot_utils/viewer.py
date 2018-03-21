@@ -1,15 +1,11 @@
 
-import itertools
-import re
 import argparse
+import itertools
 import os
-import time
-import pandas as pd
-import numpy as np
 
+import numpy as np
 import tensorflow as tf
 
-from layerwise_discriminator import get_logger, Disentagled_VAE
 # from tensorflow.python.client import timeline
 
 
@@ -31,14 +27,15 @@ test_batch_size = args.test_batch_size
 if not os.path.exists(data_dir+'/model/'+model_dir):
     raise FileExistsError()
 
-if data_dir == 'cifar-10':
+if data_dir == 'cifar10':
     import cifar_10_inputs
     inputs = cifar_10_inputs.inputs
 elif data_dir == 'higgs':
     import higgs_intputs
     inputs = higgs_intputs.inputs
 elif data_dir =='mnist':
-    import mnist_inputs
+    from mnist import mnist_inputs
+
     inputs = mnist_inputs.inputs
 
 config = tf.ConfigProto()
