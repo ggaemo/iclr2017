@@ -5,29 +5,18 @@ import tensorflow as tf
 
 class Beta_VAE_Discrim():
     def __init__(self, encoder_layer, decoder_layer, input_dim, z_dim,
-                 is_training, batch_size, final_act_fn, beta_s, beta_c,
+                 is_training, batch_size,  beta_s, beta_c,
                  output_prob,
                  learning_rate, optimizer, discriminator_layer, classifier_layer,
-                 context_class_num, discrim_lambda, classifier_lambda, deterministic_c):
+                 context_class_num, discrim_lambda, classifier_lambda, deterministic_c,lambda_d_reg):
 
         self.global_step = tf.Variable(0, trainable=False, name='global_step')
         self.is_training = is_training
         self.batch_size = batch_size
         self.context_class_num = context_class_num
         self.input_data = tf.placeholder(tf.float32, [None, input_dim, input_dim, 1])
-        # self.latent = tf.placeholder(tf.float32, [None, 5]) #dsprite에 해당하는 것 여러개의 데이터
         self.latent = tf.placeholder(tf.int64, [None, 1])
 
-        # input stream 쓸떄
-        # self.input_data = input_data['img']
-        # self.latent_class = tf.squeeze(tf.cast(tf.slice(input_data['latent'], [0, 0],
-        #                                                 [-1,1]),
-        #                             tf.int32), axis=1)
-
-        # dsprite 일때
-        # self.latent_class = tf.squeeze(tf.cast(tf.slice(self.latent, [0, 0],
-        #                                                 [-1,1]),
-        #                             tf.int32), axis=1)
         self.latent_class = self.latent
         self.latent_class_onehot =tf.one_hot(self.latent_class, context_class_num)
 
@@ -44,21 +33,21 @@ class Beta_VAE_Discrim():
             self.recon_logit_c_copied = self._build_decoder(self.latent_c_copied,
                                                             decoder_layer,
                                                             beta_s,
-                                                            final_act_fn,
+                                                            
                                                             input_dim)
         with tf.variable_scope('decoder', reuse=True):
             self.recon_logit_s_copied = self._build_decoder(self.latent_s_copied,
-                                                            decoder_layer, beta_s, final_act_fn,
+                                                            decoder_layer, beta_s, 
                                                             input_dim)
 
         with tf.variable_scope('decoder', reuse=True):
             self.recon_logit_s_copied = self._build_decoder(self.latent_s_copied,
-                                                            decoder_layer, beta_s, final_act_fn,
+                                                            decoder_layer, beta_s, 
                                                             input_dim)
 
         with tf.variable_scope('decoder', reuse=True):
             self.recon_logit_s_random = self._build_decoder(self.latent_s_random,
-                                                            decoder_layer, beta_s, final_act_fn,
+                                                            decoder_layer, beta_s, 
                                                             input_dim)
 
         self.recon_c_copied = self._build_recon_threshold(self.recon_logit_c_copied, output_prob)
@@ -68,15 +57,17 @@ class Beta_VAE_Discrim():
 
         self.recon_s_random =  self._build_recon_threshold(self.recon_logit_s_random,
                                                           output_prob)
-        # self.recon = self._build_recon_threshold(self.recon_logit, output_prob)
 
 
-        ### improved_wgan
         epsilon = tf.random_uniform((tf.shape(self.recon_s_random)[0], 1, 1, 1), 0.0, 1.0)
 
-        self.gen_reg = epsilon * self.input_data + (1 - epsilon) * self.recon_s_random
+        self.recon_grad_penalty_s_random = epsilon * self.input_data + (1 - epsilon) * \
+                                                         self.recon_s_random
+        self.recon_grad_penalty_s_recon = epsilon * self.input_data + (1 - epsilon) * \
+                                                               self.recon_s_copied
 
-
+        # self.recon_grad_penalty = self.recon_grad_penalty_s_recon + \
+        #                           self.recon_grad_penalty_s_random
 
         with tf.variable_scope('discriminator'):
             self.discrim_logit_of_input = self._build_discriminator(
@@ -94,11 +85,10 @@ class Beta_VAE_Discrim():
 
         with tf.variable_scope('discriminator', reuse=True):
             self.discrim_logit_of_recon_s_random = self._build_discriminator(
-                self.gen_reg, discriminator_layer, 1)
+                self.recon_s_random, discriminator_layer, 1)
 
             self.discrim_recon_s_random_acc = tf.reduce_mean(
                 tf.sigmoid(self.discrim_logit_of_recon_s_random))
-
 
         with tf.variable_scope('discriminator', reuse=True):
             self.discrim_logit_of_recon_c_copied = self._build_discriminator(
@@ -107,7 +97,13 @@ class Beta_VAE_Discrim():
             self.discrim_recon_c_acc = tf.reduce_mean(
                 tf.sigmoid(self.discrim_logit_of_recon_c_copied))
 
+        with tf.variable_scope('discriminator', reuse=True):
+            self.discrim_logit_of_recon_gp_s_recon = self._build_discriminator(
+                self.recon_grad_penalty_s_recon, discriminator_layer, 1)
 
+        with tf.variable_scope('discriminator', reuse=True):
+            self.discrim_logit_of_gp_s_random = self._build_discriminator(
+                self.recon_grad_penalty_s_random, discriminator_layer, 1)
 
 
         with tf.variable_scope('classifier'):
@@ -137,14 +133,14 @@ class Beta_VAE_Discrim():
                 self.recon_c_copied, classifier_layer, context_class_num)
 
             self.class_pred_recon_c_copied = tf.cast(tf.argmax(
-                self.class_logit_of_recon_c_copied,
-                                                              1),tf.int32)
+                self.class_logit_of_recon_c_copied, 1),tf.int32)
 
         self._build_loss_optimzier(output_prob, beta_s, beta_c, learning_rate,
                                    optimizer, discrim_lambda, classifier_lambda,
                                    self.z_m_c,
                               self.z_log_sigma_sq_c, self.z_m_s,
-                              self.z_log_sigma_sq_s, self.recon_logit_c_copied, deterministic_c)
+                              self.z_log_sigma_sq_s, self.recon_logit_c_copied,
+                                   deterministic_c, lambda_d_reg)
 
         self._build_summary(z_dim, deterministic_c)
 
@@ -196,7 +192,7 @@ class Beta_VAE_Discrim():
     def _build_discriminator(self, layer_input, discriminator_layer, class_num):
         pass
 
-    def _build_decoder(self, layer_input, decoder_layer, beta_s, final_act_fn,
+    def _build_decoder(self, layer_input, decoder_layer, beta_s, 
                        input_dim):
         pass
 
@@ -207,11 +203,11 @@ class Beta_VAE_Discrim():
             recon = logit
         return recon
 
-
     def _build_loss_optimzier(self, output_prob, beta_s, beta_c, learning_rate,
                               optimizer, discrim_lambda, classifier_lambda, z_m_c,
                               z_log_sigma_sq_c, z_m_s,
-                              z_log_sigma_sq_s, recon_logit, determinsitic_c):
+                              z_log_sigma_sq_s, recon_logit, determinsitic_c, lambda_d_reg):
+
         with tf.variable_scope('loss'):
 
             with tf.variable_scope('recon_loss'):
@@ -262,11 +258,26 @@ class Beta_VAE_Discrim():
                 self.discrim_loss_recon_s_rand_gen = tf.reduce_mean(self.discrim_logit_of_recon_s_random)
                 self.discrim_loss_input_adv = tf.reduce_mean(self.discrim_logit_of_input)
 
-                discrim_gradients = tf.gradients(self.discrim_logit_of_recon_s_random,
-                                                 self.gen_reg)[0]
+                self.discrim_loss_gp = tf.reduce_mean((self.discrim_logit_of_gp_s_random,
+                self.discrim_logit_of_recon_gp_s_recon))
 
-                grad_norm = tf.sqrt(tf.reduce_sum(discrim_gradients ** 2, axis=[1, 2]))
-                d_reg = tf.reduce_mean((grad_norm - 1) ** 2)
+                discrim_gradients_s_random = tf.gradients(
+                    self.discrim_logit_of_gp_s_random,
+                                                 self.recon_grad_penalty_s_random)[0]
+
+                discrim_gradients_s_recon = tf.gradients(
+                    self.discrim_logit_of_recon_gp_s_recon,
+                                                 self.recon_grad_penalty_s_recon)[0]
+
+
+                grad_norm_s_random = tf.sqrt(tf.reduce_sum(discrim_gradients_s_random **
+                                                           2, axis=[1, 2]))
+                grad_norm_s_recon = tf.sqrt(
+                    tf.reduce_sum(discrim_gradients_s_recon ** 2, axis=[1, 2]))
+
+                d_reg_s_random = tf.reduce_mean((grad_norm_s_random - 1) ** 2)
+                d_reg_s_recon = tf.reduce_mean((grad_norm_s_recon - 1) ** 2)
+                d_reg = tf.reduce_mean([d_reg_s_recon, d_reg_s_random])
 
             with tf.variable_scope('classifier_loss'):
                 self.xent_loss_input = tf.reduce_mean(
@@ -290,8 +301,6 @@ class Beta_VAE_Discrim():
                     ) * classifier_lambda
                 )
 
-
-
         update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
 
         discrim_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES,
@@ -312,20 +321,16 @@ class Beta_VAE_Discrim():
         vae_vars = list(set(tf.trainable_variables()) - set(discrim_vars) - set(classifier_vars))
         # vae_vars = encoder_vars + decoder_vars + latent_vars # same as above
 
-        self.vae_loss = self.recon_loss + self.latent_loss_s * beta_s #+ self.latent_loss_c * beta_c
+        self.vae_loss = self.recon_loss + self.latent_loss_s * beta_s
 
-        self.discrim_generative_loss = 0.5 * (self.discrim_loss_recon_s_gen \
-                                       + self.discrim_loss_recon_s_rand_gen)
+        self.discrim_fake_loss = tf.reduce_mean( (self.discrim_loss_recon_s_gen \
+                                        + self.discrim_loss_recon_s_rand_gen))
 
-        # self.discrim_adversarial_loss_g = self.discrim_loss_recon_s_adv + \
-        #                                   self.discrim_loss_recon_s_rand_adv
+        self.discrim_real_loss = self.discrim_loss_input_adv
 
-        self.discrim_adversarial_loss_r = self.discrim_loss_input_adv
+        self.discrim_w_loss = self.discrim_real_loss - self.discrim_fake_loss
 
-        self.discrim_w_loss = self.discrim_adversarial_loss_r - self.discrim_generative_loss \
-                               - 10 *d_reg
-
-        self.discrim_adversarial_loss_g = self.discrim_w_loss
+        self.discrim_w_loss_gp = self.discrim_w_loss - lambda_d_reg * d_reg
 
         self.classifier_loss = self.xent_loss_input
         self.classifier_loss_gen = 0.5 * (self.xent_loss_recon_s
@@ -334,7 +339,7 @@ class Beta_VAE_Discrim():
         with tf.control_dependencies(update_ops):
 
             if optimizer == 'Adam':
-                optimizer = tf.train.AdamOptimizer(1e-4, 0.0, 0.9)
+                optimizer = tf.train.AdamOptimizer(1e-4, 0.5, 0.9)
 
             self.train_op_vae = tf.contrib.layers.optimize_loss(self.vae_loss,
                                                                 self.global_step,
@@ -343,22 +348,12 @@ class Beta_VAE_Discrim():
                                                                 variables=vae_vars)
 
             self.train_op_w = tf.contrib.layers.optimize_loss(
-                    -self.discrim_w_loss,
+                    -self.discrim_w_loss_gp,
                     self.global_step, learning_rate, optimizer, variables=discrim_vars)
 
-            self.train_op_gen = tf.contrib.layers.optimize_loss(
-                -self.discrim_generative_loss, self.global_step, learning_rate, optimizer,
-            variables=decoder_vars)
-
-            # self.train_op_adv_g = tf.contrib.layers.optimize_loss(
-            #     self.discrim_adversarial_loss_g,
-            #     self.global_step, learning_rate, optimizer,
-            #     variables=discrim_vars)
-
-            # self.train_op_adv_r = tf.contrib.layers.optimize_loss(
-            #     self.discrim_adversarial_loss_r,
-            #     self.global_step, learning_rate, optimizer,
-            #     variables=discrim_vars)
+            self.train_op_w_gen = tf.contrib.layers.optimize_loss(
+                -self.discrim_fake_loss, self.global_step, learning_rate, optimizer,
+            variables=vae_vars)
 
             self.train_op_classifier = tf.contrib.layers.optimize_loss(
                 self.classifier_loss,
@@ -371,7 +366,6 @@ class Beta_VAE_Discrim():
                 self.global_step, learning_rate, optimizer,
                 variables=vae_vars
             )
-
 
     def _build_summary(self, z_dim, deterministic_c):
         summary_list = list()
@@ -392,12 +386,6 @@ class Beta_VAE_Discrim():
             metrics_collections='streaming_loss',
             updates_collections='loss_update',
             name='latent_s')
-
-        discrim_gen_mean, discrim_gen_update= tf.contrib.metrics.streaming_mean(
-            self.discrim_generative_loss,
-            metrics_collections='streaming_loss',
-            updates_collections='loss_update',
-            name='discrim_gen_loss')
 
         discrim_w_mean, discrim_w_update = tf.contrib.metrics.streaming_mean(
             self.discrim_w_loss,
@@ -462,9 +450,9 @@ class Beta_VAE_Discrim():
                 updates_collections='loss_update',
                 name='class_recon_c_acc')
 
-        self.loss_values = tf.placeholder(tf.float32, [13])
+        self.loss_values = tf.placeholder(tf.float32, [12])
         recon_mean_val, vae_mean_val, latent_s_mean_val, \
-        discrim_gen_mean_val, discrim_w_mean_val, \
+        discrim_w_mean_val, \
         discrim_recon_s_acc_val, discrim_recon_c_acc_val, discrim_input_acc_val,  \
         class_input_loss_val, \
         class_recon_s_loss_val, class_input_acc_val, class_recon_s_acc_val, \
@@ -472,9 +460,7 @@ class Beta_VAE_Discrim():
          = tf.unstack(self.loss_values)
         summary_list.append(tf.summary.scalar('recon_loss', recon_mean_val))
         summary_list.append(tf.summary.scalar('vae_loss', vae_mean_val))
-        # summary_list.append(tf.summary.scalar('latent_c_loss', latent_c_mean_val))
         summary_list.append(tf.summary.scalar('latent_s_loss', latent_s_mean_val))
-        summary_list.append(tf.summary.scalar('discrim_gen_loss', discrim_gen_mean_val))
         summary_list.append(tf.summary.scalar('discrim_w_loss', discrim_w_mean_val))
         summary_list.append(tf.summary.scalar('class_input_loss', class_input_loss_val))
         summary_list.append(tf.summary.scalar('class_recon_loss',
@@ -492,32 +478,6 @@ class Beta_VAE_Discrim():
         self.loss_summaries = tf.summary.merge(summary_list)
 
         summary_image_list = list()
-
-        # def __make_latent_summary(z_m, z_log_sigma_sq, latent_loss, latent_loss_sliced,
-        #                           type):
-        #     z_m_mean = tf.reduce_mean(z_m, axis=0)
-        #     z_s_mean = tf.reduce_mean(z_log_sigma_sq, axis=0)
-        #     z_m_sliced = tf.unstack(z_m_mean)
-        #     z_s_sliced = tf.unstack(z_s_mean)
-        #     for i in range(z_dim):
-        #         summary_image_list.append(tf.summary.scalar('z_m_{}_{}'.format(type, i),
-        #                                                     z_m_sliced[i]))
-        #     for i in range(z_dim):
-        #         summary_image_list.append(
-        #             tf.summary.scalar('z_{}_{}'.format(type, i), z_s_sliced[i]))
-        #
-        #     summary_image_list.append(tf.summary.scalar('latent_loss_{}'.format(type),
-        #                                                 latent_loss))
-        #     for i in range(z_dim):
-        #         summary_image_list.append(tf.summary.scalar('latent_loss_{}_{}'.format(
-        #             type, i), latent_loss_sliced[i]))
-        #
-        # __make_latent_summary(self.z_m_s, self.z_log_sigma_sq_s, self.latent_loss_s,
-        #                       self.latent_loss_sliced_s, 's')
-        #
-        # if not deterministic_c:
-        #     __make_latent_summary(self.z_m_c, self.z_log_sigma_sq_c, self.latent_loss_c,
-        #                           self.latent_loss_sliced_c, 'c')
 
         num_per_class = int(self.batch_size / self.context_class_num)
 
@@ -545,35 +505,32 @@ class Beta_VAE_Discrim():
 
 class Disentagled_VAE_FC_Discrim(Beta_VAE_Discrim):
     def __init__(self, encoder_layer, decoder_layer, input_dim, z_dim,
-                 is_training, batch_size, final_act_fn, beta_s, beta_c,
+                 is_training, batch_size,  beta_s, beta_c,
                  output_prob,
                  learning_rate, optimizer, discriminator_layer, classifier_layer,
-                 context_class_num, discrim_lambda, classifier_lambda, deterministic_c):
+                 context_class_num, discrim_lambda, classifier_lambda, deterministic_c, lambda_d_reg):
         super().__init__(encoder_layer, decoder_layer, input_dim, z_dim,
-                         is_training, batch_size, final_act_fn, beta_s, beta_c,
+                         is_training, batch_size,  beta_s, beta_c,
                          output_prob,
                          learning_rate, optimizer, discriminator_layer,classifier_layer,
                          context_class_num, discrim_lambda, classifier_lambda,
-                         deterministic_c)
+                         deterministic_c, lambda_d_reg)
 
     def _build_encoder(self, encoder_layer):
         encoder_layer_list = list()
         encoder_layer_list.append(tf.contrib.layers.flatten(self.input_data))
-        # normalizer_fn = tf.contrib.layers.batch_norm
-        # normalizer_params = {'fused':
-        #                          True,
-        #                      'scale': True,
-        #                      'is_training'
-        #                      : self.is_training,
-        #                     'zero_debias_moving_mean': True,
-        #                     'decay' : 0.9,
-        #                      'updates_collections': None
-        #                      }
 
-        normalizer_fn = None
-        normalizer_params = None
         for layer_num, layer_config in enumerate(encoder_layer):
             hidden_dim = layer_config
+            if layer_num ==len(encoder_layer) - 1:
+                normalizer_fn = None
+                normalizer_params = None
+            else:
+                normalizer_fn = tf.contrib.layers.batch_norm
+                normalizer_params = {'is_training'
+                                     : self.is_training
+                                     }
+
             with tf.variable_scope('layer_{}'.format(layer_num)):
                 layer_inputs = encoder_layer_list[-1]
                 layer_output = tf.contrib.layers.fully_connected(
@@ -588,13 +545,11 @@ class Disentagled_VAE_FC_Discrim(Beta_VAE_Discrim):
         encoder_output = encoder_layer_list[-1]
         return encoder_output
 
-    def _build_decoder(self, layer_input, decoder_layer, beta_s,  final_act_fn,
+    def _build_decoder(self, layer_input, decoder_layer, beta_s,  
                        input_dim):
 
-        decoder_input = tf.contrib.layers.fully_connected(layer_input)
-
         decoder_layer_list = list()
-        decoder_layer_list.append(decoder_input)
+        decoder_layer_list.append(layer_input)
 
         for layer_num, layer_config in enumerate(decoder_layer):
             hidden_dim = layer_config
@@ -603,30 +558,19 @@ class Disentagled_VAE_FC_Discrim(Beta_VAE_Discrim):
                 if layer_num == len(decoder_layer) - 1:
                     normalizer_fn = None
                     normalizer_params = None
-                    layer_output = tf.contrib.layers.fully_connected(
-                        layer_inputs, hidden_dim, final_act_fn,
-                        normalizer_fn=normalizer_fn,
-                        normalizer_params=normalizer_params
-                    )
-                else:
-                    # normalizer_fn = tf.contrib.layers.batch_norm
-                    # normalizer_params = {'fused':
-                    #                          True,
-                    #                      'scale': True,
-                    #                      'is_training'
-                    #                      : self.is_training,
-                    #                      'zero_debias_moving_mean': True,
-                    #                      'decay' : 0.9,
-                    #                      'updates_collections': None
-                    #                      }
-                    normalizer_fn = None
-                    normalizer_params = None
+                    activation_fn = tf.identity
 
-                    layer_output = tf.contrib.layers.fully_connected(
-                        layer_inputs, hidden_dim, lambda x: tf.nn.leaky_relu(x,alpha=0.2),
-                        normalizer_fn=normalizer_fn,
-                        normalizer_params=normalizer_params
-                    )
+                else:
+                    normalizer_fn = tf.contrib.layers.batch_norm
+                    normalizer_params = {'is_training': self.is_training}
+                    activation_fn = lambda x: tf.nn.leaky_relu(x,alpha=0.2)
+
+
+                layer_output = tf.contrib.layers.fully_connected(
+                    layer_inputs, hidden_dim, activation_fn,
+                    normalizer_fn=normalizer_fn,
+                    normalizer_params=normalizer_params
+                )
 
                 decoder_layer_list.append(layer_output)
 
@@ -634,21 +578,13 @@ class Disentagled_VAE_FC_Discrim(Beta_VAE_Discrim):
 
         decoder_output = decoder_layer_list[-1]
 
-        # decoder_output_dist = output_prob(logits=decoder_output)
-        # decoder_output_mean = decoder_output_dist.probs
-        # decoder_output_logits = decoder_output_dist.logits
-        # decoder_output_mean = decoder_output
-
         logit = tf.reshape(decoder_output, (-1, input_dim,
                                                  input_dim, 1))
         return logit
 
     def _build_discriminator(self, layer_input, discriminator_layer, class_num):
         discrim_layer_list = list()
-        # flattened = tf.contrib.layers.flatten(layer_input)
         discrim_layer_list.append(layer_input)
-
-        first_fc = True
 
         for layer_num, layer_config in enumerate(discriminator_layer):
 
@@ -659,31 +595,18 @@ class Disentagled_VAE_FC_Discrim(Beta_VAE_Discrim):
                     normalizer_fn = None
                     normalizer_params = None
                 else:
-                    # normalizer_fn = tf.contrib.layers.batch_norm  #original gan
-                    # normalizer_params = {'is_training'
-                    #                      : self.is_training
-                    #                      }
+                    normalizer_fn = tf.contrib.layers.batch_norm
+                    normalizer_params = {'is_training'
+                                         : self.is_training
+                                         }
 
-                    normalizer_fn = tf.contrib.layers.layer_norm # improved wgan
-                    normalizer_params = None
+                (num_filter, kernel_size, stride) = layer_config
+                layer_output = tf.contrib.layers.conv2d(
+                    layer_inputs, num_filter, kernel_size, stride,
+                    activation_fn=lambda x:tf.nn.leaky_relu(x,alpha=0.2),
+                    normalizer_fn=normalizer_fn,
+                    normalizer_params=normalizer_params)
 
-                if len(layer_config) == 3:
-                    (num_filter, kernel_size, stride) = layer_config
-                    layer_output = tf.contrib.layers.conv2d(
-                        layer_inputs, num_filter, kernel_size, stride,
-                        activation_fn=lambda x:tf.nn.leaky_relu(x,alpha=0.2),
-                        normalizer_fn=normalizer_fn,
-                        normalizer_params=normalizer_params)
-                else:
-                    if first_fc:
-                        layer_inputs = tf.contrib.layers.flatten(layer_inputs)
-                        first_fc = False
-                    hidden_size = layer_config
-                    layer_output = tf.contrib.layers.fully_connected(
-                        layer_inputs, hidden_size, lambda x:tf.nn.leaky_relu(x,alpha=0.2), normalizer_fn=normalizer_fn,
-                        normalizer_params=normalizer_params)
-
-                # after_act_fc = tf.maximum(0.2 * before_act_fn, before_act_fn)
                 discrim_layer_list.append(layer_output)
             print('discrim : ', discrim_layer_list[-1].shape)
 
@@ -691,6 +614,7 @@ class Disentagled_VAE_FC_Discrim(Beta_VAE_Discrim):
         layer_inputs = tf.contrib.layers.flatten(layer_inputs)
         discrim_logit = tf.contrib.layers.fully_connected(
             layer_inputs, class_num, None)
+        print('discriminator output : ', discrim_logit.shape)
 
         return discrim_logit
 
@@ -698,16 +622,16 @@ class Disentagled_VAE_FC_Discrim(Beta_VAE_Discrim):
 
 class Disentagled_VAE_CNN_Discrim(Beta_VAE_Discrim):
     def __init__(self, encoder_layer, decoder_layer, input_dim,  z_dim,
-                 is_training, batch_size, final_act_fn, beta_s, beta_c,
+                 is_training, batch_size,  beta_s, beta_c,
                  output_prob,
                  learning_rate, optimizer, discriminator_layer, classifier_layer,
-                 context_class_num, discrim_lambda, classifier_lambda, deterministic_c):
+                 context_class_num, discrim_lambda, classifier_lambda, deterministic_c, lambda_d_reg):
         super().__init__(encoder_layer, decoder_layer, input_dim, z_dim,
-                         is_training, batch_size, final_act_fn, beta_s, beta_c,
+                         is_training, batch_size,  beta_s, beta_c,
                          output_prob,
                          learning_rate, optimizer, discriminator_layer,classifier_layer,
                          context_class_num, discrim_lambda, classifier_lambda,
-                         deterministic_c)
+                         deterministic_c, lambda_d_reg)
 
     def _build_encoder(self, encoder_layer):
         encoder_layer_list = list()
@@ -745,7 +669,7 @@ class Disentagled_VAE_CNN_Discrim(Beta_VAE_Discrim):
         print('encoder output :', encoder_output.shape)
         return encoder_output
 
-    def _build_decoder(self, layer_input, decoder_layer, beta_s, final_act_fn,
+    def _build_decoder(self, layer_input, decoder_layer, beta_s, 
                        input_dim):
 
         # decoder_layer.append(input_dim * input_dim)
@@ -758,8 +682,6 @@ class Disentagled_VAE_CNN_Discrim(Beta_VAE_Discrim):
         :return:
         '''
 
-
-
         ''''
           def _get_deconv2d_output_size(self, input_height, input_width, filter_height,
                                 filter_width, row_stride, col_stride, padding_type):
@@ -769,10 +691,7 @@ class Disentagled_VAE_CNN_Discrim(Beta_VAE_Discrim):
         elif padding_type == 'SAME':
           out_height = input_height * row_stride
           out_width  = input_width * col_stride
-        return out_height, out_width
-        
-               
-        
+        return out_height, out_width        
         '''
         layer_input_expand_dim = tf.expand_dims(tf.expand_dims(layer_input, 1), 1)
         decoder_layer_list = list()
@@ -789,24 +708,27 @@ class Disentagled_VAE_CNN_Discrim(Beta_VAE_Discrim):
                 if layer_num == len(decoder_layer) - 1:
                     normalizer_fn = None
                     normalizer_params = None
+                    activation_fn = tf.identity
                 else:
                     normalizer_fn = tf.contrib.layers.batch_norm
                     normalizer_params = {'is_training' : self.is_training}
+                    activation_fn = lambda x: tf.nn.leaky_relu(x, alpha=0.2)
+
                 layer_output = tf.contrib.layers.conv2d_transpose(
                     layer_inputs, num_filter, kernel_size, stride,
-                    activation_fn=lambda x: tf.nn.leaky_relu(x, alpha=0.2),
+                    activation_fn=activation_fn,
                     normalizer_fn=normalizer_fn,
                     normalizer_params=normalizer_params)
 
-            decoder_layer_list.append(layer_output)
+                decoder_layer_list.append(layer_output)
 
             print('dec : ', decoder_layer_list[-1].shape)
 
         decoder_output = decoder_layer_list[-1]
 
         crop = int((output_size - input_dim) / 2)
-
-        decoder_output = decoder_output[:,crop:-crop,crop:-crop,:]
+        if crop > 0:
+            decoder_output = decoder_output[:,crop:-crop,crop:-crop,:]
 
         logit = tf.reshape(decoder_output, (-1, input_dim,
                                                  input_dim, 1))
@@ -829,7 +751,7 @@ class Disentagled_VAE_CNN_Discrim(Beta_VAE_Discrim):
                     normalizer_fn = None
                     normalizer_params = None
                 else:
-                    normalizer_fn = tf.contrib.layers.layer_norm # improved gan
+                    normalizer_fn = tf.contrib.layers.layer_norm
                     normalizer_params = None
 
                 (num_filter, kernel_size, stride) = layer_config

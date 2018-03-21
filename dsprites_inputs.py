@@ -17,7 +17,7 @@ def make_example(image, latent):
     latent = latent.astype(np.float32)
     ex = tf.train.Example(features=tf.train.Features(feature={
         'img': _bytes_feature(image),
-        'latent' : _float_feature(latent)
+        'latent' : _float_feature([latent])
         }))
 
     return ex
@@ -56,6 +56,7 @@ def make_tfrecords_single():
 
         writer = tf.python_io.TFRecordWriter(filename)
         for image, latent in zip(data['img'], data['latent']):
+            latent = latent[0]
             ex = make_example(image, latent)
             writer.write(ex.SerializeToString())
         writer.close()
@@ -64,7 +65,7 @@ def make_tfrecords_single():
 def read_and_decode(example_proto):
     print('Reading and Decoding')
     features =  {'img' : tf.FixedLenFeature([], tf.string),
-                 'latent' : tf.FixedLenFeature([5], tf.float32)}
+                 'latent' : tf.FixedLenFeature([1], tf.float32)}
 
 
     data_parsed = tf.parse_single_example(

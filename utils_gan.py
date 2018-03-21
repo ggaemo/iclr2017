@@ -1,5 +1,5 @@
 
-
+import time
 import tensorflow as tf
 import itertools
 import collections
@@ -112,12 +112,12 @@ class Eval():
             raise MaxEpochError('Max Epoch')
         if test_loss[1] < self.best_loss:  # second term refers to recon_loss
             print('better model in recon loss')
-            self.saver.save(self.sess, self.save_dir+'model.ckpt',
+            self.saver.save(self.sess, self.save_dir+'best_recon_model.ckpt',
                        global_step=epoch)
             self.best_loss = test_loss[1]
             self.patience = 0
-        elif epoch % 30 == 0:
-            print('save every 30 epochs')
+        elif epoch % 5 == 0:
+            print('save every 5 epochs')
             self.saver_periodical.save(self.sess, self.save_dir + 'model_periodical.ckpt',
                             global_step=epoch)
         else:
@@ -179,54 +179,17 @@ class Eval_discrim(Eval):
 
         self.sess.run(self.init_op)
 
-        def _report(config):
-            _, recon_loss, dis_gen_loss, dis_ad_loss, dis_recon_acc, \
-            dis_input_acc, class_loss = \
-                self.sess.run([
-                    self.model.train_op_adv,
-                    self.model.recon_loss,
-                    self.model.discrim_generative_loss,
-                    self.model.discrim_adversarial_loss_g,
-                    self.model.discrim_recon_s_acc,
-                    self.model.discrim_input_acc,
-                    self.model.classifier_loss],
-                    feed_dict={
-                        self.model.is_training: True,
-                        self.model.permutation_s: permutation_s,
-                        self.model.permutation_c: permutation_c
-                    })
-            print(
-                '{} epoch {} sub_count {} : recon {:.2f} d_g {:.2f} '
-                'd_a {:.2f} c {:.2f} d_input_acc {:.2f} d_recon_acc {:.2f}'.format(config,
-                                                                              count,
-                                                                   sub_count, recon_loss,
-                                                                   dis_gen_loss,
-                                                                   dis_ad_loss,
-                                                                   class_loss,
-                                                                   dis_input_acc,
-                                                                   dis_recon_acc))
-
-
-
         count = 0
-
-        dis_gen_loss = 1e3
-        dis_ad_loss = 1e3
-        recon_loss = 1e4
-        class_loss = 1e4
-
         run_period = 1
 
-
+        start = time.time()
         while True:
-
 
             if count % self.perm_change == 0:
                 permutation_c, permutation_s = self._get_permutation()
 
-
-
             try:
+
                 inputs = self.sess.run(self.inputs)
                 input_data = inputs['img']
                 latent = inputs['latent']
@@ -237,112 +200,49 @@ class Eval_discrim(Eval):
                              self.model.input_data: input_data,
                              self.model.latent: latent}
 
-                #vae RECON
-                sub_count = 0
-                while (True):
-                    sub_count += 1
-
-                    if sub_count == 2:
-                        break
-
-                    for _ in range(run_period):
-                        _, recon_loss, dis_gen_loss, dis_ad_loss, class_loss, \
-                        class_loss_gen\
-                            = \
-                            self.sess.run([
-                                self.model.train_op_vae,
-                                self.model.recon_loss,
-                                self.model.discrim_generative_loss,
-                                self.model.discrim_adversarial_loss_g,
-                                self.model.classifier_loss,
-                                self.model.classifier_loss_gen],
-                                feed_dict=feed_dict)
+                for _ in range(run_period):
+                    self.sess.run(self.model.train_op_vae, feed_dict=feed_dict)
 
                 #classifier train
-                sub_count = 0
-                while (True):
-                    sub_count += 1
 
-                    if sub_count ==2 :
-                        break
-                    for _ in range(run_period):
-                        _, class_loss = self.sess.run([self.model.train_op_classifier,
-                                       self.model.classifier_loss],
-                                      feed_dict=feed_dict)
+                for _ in range(run_period):
+                    self.sess.run(self.model.train_op_classifier, feed_dict=feed_dict)
 
+                # vae classifier gen
 
-                # vae classifier
-                        # vae
-                sub_count = 0
-                while (True):
-                    sub_count += 1
-
-                    if sub_count == 2:
-                        break
-
-                    for _ in range(run_period):
-                        _, recon_loss, dis_gen_loss, dis_ad_loss, class_loss, \
-                        class_loss_gen\
-                            = \
-                            self.sess.run([
-                                self.model.train_op_classifier_gen,
-                                self.model.recon_loss,
-                                self.model.discrim_generative_loss,
-                                self.model.discrim_adversarial_loss_g,
-                                self.model.classifier_loss,
-                                self.model.classifier_loss_gen],
-                                feed_dict=feed_dict)
-
-                '''
-                critic
-                '''
+                for _ in range(run_period):
+                    self.sess.run(self.model.train_op_classifier_gen, feed_dict=feed_dict)
 
                 #w_discrim
-                sub_count = 0
-                while (True):
-                    sub_count += 1
-
-                    if sub_count == 6:
-                        break
-
-                    _, dis_gen_loss, dis_ad_loss = self.sess.run([
-                    self.model.train_op_w,
-                    self.model.discrim_generative_loss,
-                    self.model.discrim_adversarial_loss_g],
-                    feed_dict=feed_dict)
-
-
+                for _ in range(run_period * 5):
+                    self.sess.run(self.model.train_op_w, feed_dict=feed_dict)
 
                 # w_gen
-                sub_count = 0
-                while (True):
-                    sub_count += 1
 
-                    if sub_count == 2:
-                        break
+                for _ in range(run_period):
+                    _, recon_loss, c_loss_input, c_loss_gen = \
+                        self.sess.run([
+                            self.model.train_op_w_gen,
+                            self.model.recon_loss,
+                            self.model.classifier_loss,
+                            self.model.classifier_loss_gen,
 
-
-                    _, dis_gen_loss, dis_ad_loss = self.sess.run([
-                        self.model.train_op_gen,
-                        self.model.discrim_generative_loss,
-                        self.model.discrim_adversarial_loss_g],
-                        feed_dict=feed_dict)
-
-                class_loss_gen = 0
-                self.logger.info('whole cycle : recon {:.2f} d_g {:.2f} '
-                                 'd_a {:.2f} c {:.2f} c_g {:.2f}'.format(recon_loss,
-                                                         dis_gen_loss,
-                                                         dis_ad_loss,
-                                                         class_loss, class_loss_gen))
-
+                        ],
+                            feed_dict=feed_dict)
+                if count % 50 == 0:
+                    self.logger.info('batch_count {} : recon {:.2f}, classifier_input_loss {:.2f}, classifier_gen_loss {:.2f}'.format(count,
+                                                                                recon_loss,
+                                                                                c_loss_input,
+                                                                                c_loss_gen) )
                 count += 1
 
             except tf.errors.OutOfRangeError:
                 self.logger.info('train out of range')
                 break
 
+        time_spent = (time.time() - start) /60
+        self.logger.info('one epoch took {} minutes'.format(time_spent))
 
-        print('done training')
 
     def eval_score_and_save_model(self, epoch):
 
@@ -360,35 +260,33 @@ class Eval_discrim(Eval):
 
 
         permutation_c, permutation_s = self._get_permutation()
-        cnt = 0
+        cnt = 1
+
+
+
         while True:
 
             # eval just range
-            num = np.random.randint(1000)
+            num = np.random.randint(500)
             try:
                 inputs = self.sess.run(self.inputs)
                 input_data = inputs['img']
                 latent = inputs['latent']
 
+                feed_dict = {self.model.is_training: False,
+                             self.model.permutation_s: permutation_s,
+                             self.model.permutation_c: permutation_c,
+                             self.model.input_data: input_data,
+                             self.model.latent: latent}
                 if cnt == num:
                     fetch = [self.loss_update_op, self.model.image_summaries]
-                    _, img_summary_val = self.sess.run(fetch, feed_dict={
-                        self.model.is_training: False,
-                        self.model.permutation_s: permutation_s,
-                        self.model.permutation_c: permutation_c,
-                        self.model.input_data: input_data,
-                        self.model.latent: latent
-                        })
+                    _, img_summary_val = self.sess.run(fetch, feed_dict=feed_dict)
 
                     self.test_writer.add_summary(img_summary_val, global_step=epoch)
                 else:
                     fetch = [self.loss_update_op]
-                    self.sess.run(fetch, feed_dict={self.model.is_training:False,
-                                                     self.model.permutation_s:permutation_s,
-                                                    self.model.permutation_c:permutation_c,
-                                                    self.model.input_data: input_data,
-                                                    self.model.latent: latent
-                                                    })
+                    self.sess.run(fetch, feed_dict=feed_dict)
+
                 cnt += 1
             except tf.errors.OutOfRangeError:
                 print('eval out of range')
@@ -399,7 +297,7 @@ class Eval_discrim(Eval):
         self.test_writer.add_summary(test_summary_val, global_step=epoch)
         self.test_writer.flush()
 
-        result = 'epoch {} | oss : recon {}, vae {}, latent_s {}, d_gen {}, d_adv {}, ' \
+        result = 'epoch {} | oss : recon {}, vae {}, latent_s {}, discrim_w_loss {}, ' \
                  'd_recon_s_acc {}, d_recon_c_acc {}, d_input {}, c_input {}, c_recon_s ' \
                  '{}, c_input_acc ' \
                  '{} c_recon_s_acc {} c_recon_c_acc {}'.format(
