@@ -26,7 +26,7 @@ parser.add_argument('-b', help = 'batch size has to be divisor of total batch fo
                     type=int)
 
 # mnist : 10 * 10
-# dsprite : 3 * 2 * 20
+# dsprites : 3 * 2 * 20
 parser.add_argument('-enc', type=int, nargs='+')
 
 parser.add_argument('-input_dim', type=int)
@@ -63,6 +63,9 @@ parser.add_argument('-perm_change', help='number of batches before changing perm
 parser.add_argument('-restore', help='restore or not', action='store_true',
                     default=False)
 
+parser.add_argument('--debug', help='debug mode or not', action='store_true',
+                    default=False)
+
 class OverfitError(Exception):
     pass
 
@@ -95,6 +98,8 @@ lambda_d_reg = args.lambda_d_reg
 option = args.option
 
 restore = args.restore
+
+debug = args.debug
 
 
 
@@ -144,10 +149,9 @@ if data_dir == 'higgs':
     inputs = higgs_intputs.inputs
 elif data_dir =='mnist':
     from mnist import mnist_inputs
-
     inputs = mnist_inputs.inputs_single_file
 elif data_dir == 'dsprites':
-    from dsprite import dsprites_inputs
+    from dsprites import dsprites_inputs
     print('single_file')
     inputs = dsprites_inputs.inputs_single_file
 
@@ -180,7 +184,14 @@ config.gpu_options.allow_growth=True
 config.allow_soft_placement=True
 
 
+from tensorflow.python import debug as tf_debug
+
+
 with tf.Session(config=config) as sess:
+    if debug:
+        debug_sess = tf_debug.LocalCLIDebugWrapperSession(sess)
+    else:
+        debug_sess = sess
 
     saver = tf.train.Saver(max_to_keep=5)
     saver_periodical = tf.train.Saver(max_to_keep=5)
@@ -205,7 +216,7 @@ with tf.Session(config=config) as sess:
     trn_eval = utils.Eval_discrim(trn_model, train_inputs, train_init_op, sess, logger,
                                   test_writer,
                                   saver, saver_periodical, save_dir, max_patience,
-                                  max_epoch, perm_change, context_class_num)
+                                  max_epoch, perm_change, context_class_num, debug_sess)
 
     try:
         while True:

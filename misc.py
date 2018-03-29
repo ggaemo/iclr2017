@@ -1,4 +1,5 @@
 import logging
+import os
 
 def get_logger(data_dir, model_config):
     logger = logging.getLogger(__name__)

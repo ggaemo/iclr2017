@@ -122,7 +122,8 @@ class Eval():
 class Eval_discrim(Eval):
     def __init__(self, model, inputs, init_op, sess, logger,
                      writer, saver, saver_periodical, save_dir, max_patience, max_epoch,
-                 perm_change, context_class_num):
+                 perm_change, context_class_num, debug_sess):
+        self.debug_sess = debug_sess
         super().__init__(model, inputs, init_op, sess, logger,
                      writer, saver, saver_periodical, save_dir, max_patience, max_epoch,
                          perm_change, context_class_num)
@@ -159,11 +160,6 @@ class Eval_discrim(Eval):
 
         permutation_s = np.concatenate(perm_list)
 
-        # wgan 실험할때 씀
-        # permutation_c = np.concatenate([np.repeat([i * 2 , i * 2 + 1], int(self.model.batch_size / self.context_class_num / 2)) for i in
-        #                                 range(self.context_class_num)])
-        # permutation_s = permutation_c
-
         return permutation_c, permutation_s
 
     def train(self):
@@ -192,7 +188,9 @@ class Eval_discrim(Eval):
                              self.model.latent: latent}
 
                 for _ in range(run_period):
-                    self.sess.run(self.model.train_op_vae, feed_dict=feed_dict)
+
+                    self.debug_sess.run(
+                        self.model.train_op_vae, feed_dict=feed_dict)
 
                 #classifier train
 
@@ -204,12 +202,11 @@ class Eval_discrim(Eval):
                 for _ in range(run_period):
                     self.sess.run(self.model.train_op_classifier_gen, feed_dict=feed_dict)
 
-                #w_discrim
+                # #w_discrim
                 for _ in range(run_period * 5):
                     self.sess.run(self.model.train_op_w, feed_dict=feed_dict)
 
-                # w_gen
-
+                # #w_gen
                 for _ in range(run_period):
                     _, recon_loss, c_loss_input, c_loss_gen = \
                         self.sess.run([
@@ -220,7 +217,8 @@ class Eval_discrim(Eval):
 
                         ],
                             feed_dict=feed_dict)
-                if count % 50 == 0:
+
+                if count % 100 == 0:
                     self.logger.info('batch_count {} : recon {:.2f}, classifier_input_loss {:.2f}, classifier_gen_loss {:.2f}'.format(count,
                                                                                 recon_loss,
                                                                                 c_loss_input,
@@ -252,7 +250,6 @@ class Eval_discrim(Eval):
 
         permutation_c, permutation_s = self._get_permutation()
         cnt = 1
-
 
 
         while True:

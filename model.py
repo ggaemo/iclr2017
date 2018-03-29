@@ -22,7 +22,8 @@ class Beta_VAE_Discrim():
 
 
         with tf.variable_scope('encoder'):
-            self.encoder_output = self._build_encoder(encoder_layer)
+            self.encoder_output, self.encoder_output_shape = self._build_encoder(
+                encoder_layer)
 
         with tf.variable_scope('latent'):
             self.latent_c_copied, self.latent_s_copied, self.latent_s_random = \
@@ -33,22 +34,19 @@ class Beta_VAE_Discrim():
             self.recon_logit_c_copied = self._build_decoder(self.latent_c_copied,
                                                             decoder_layer,
                                                             beta_s,
-                                                            
-                                                            input_dim)
+                                                            input_dim, self.encoder_output_shape)
         with tf.variable_scope('decoder', reuse=True):
             self.recon_logit_s_copied = self._build_decoder(self.latent_s_copied,
-                                                            decoder_layer, beta_s, 
-                                                            input_dim)
-
+                                                            decoder_layer, beta_s,
+                                                            input_dim, self.encoder_output_shape)
         with tf.variable_scope('decoder', reuse=True):
             self.recon_logit_s_copied = self._build_decoder(self.latent_s_copied,
-                                                            decoder_layer, beta_s, 
-                                                            input_dim)
-
+                                                            decoder_layer, beta_s,
+                                                            input_dim, self.encoder_output_shape)
         with tf.variable_scope('decoder', reuse=True):
             self.recon_logit_s_random = self._build_decoder(self.latent_s_random,
-                                                            decoder_layer, beta_s, 
-                                                            input_dim)
+                                                            decoder_layer, beta_s,
+                                                            input_dim, self.encoder_output_shape)
 
         self.recon_c_copied = self._build_recon_threshold(self.recon_logit_c_copied, output_prob)
 
@@ -66,8 +64,8 @@ class Beta_VAE_Discrim():
         self.recon_grad_penalty_s_recon = epsilon * self.input_data + (1 - epsilon) * \
                                                                self.recon_s_copied
 
-        # self.recon_grad_penalty = self.recon_grad_penalty_s_recon + \
-        #                           self.recon_grad_penalty_s_random
+        self.recon_grad_penalty = self.recon_grad_penalty_s_recon + \
+                                  self.recon_grad_penalty_s_random
 
         with tf.variable_scope('discriminator'):
             self.discrim_logit_of_input = self._build_discriminator(
@@ -172,6 +170,8 @@ class Beta_VAE_Discrim():
 
         latent_c_copied = tf.concat([self.z_v_c_copied, self.z_v_s], axis=1)
 
+        # latent_c_copied = self.z_v_c_copied + self.z_v_s
+
         self.partitioned_s = tf.dynamic_partition(self.z_v_s, self.permutation_s,
                                                   class_num * 2)
 
@@ -182,10 +182,15 @@ class Beta_VAE_Discrim():
 
         latent_s_copied = tf.concat([self.z_v_c_copied, self.z_v_s_copied],
                                            axis=1)
+        #
+        # latent_s_copied = self.z_v_c_copied + self.z_v_s_copied
 
         latent_s_random = tf.concat([self.z_v_c_copied,
                                      tf.random_normal(tf.shape(self.z_v_s_copied))
                                      ], axis=1)
+
+        # latent_s_random = self.z_v_c_copied + tf.random_normal(tf.shape(self.z_v_s_copied))
+
 
         return latent_c_copied, latent_s_copied, latent_s_random
 
@@ -193,7 +198,7 @@ class Beta_VAE_Discrim():
         pass
 
     def _build_decoder(self, layer_input, decoder_layer, beta_s, 
-                       input_dim):
+                       input_dim, encoder_output_shape):
         pass
 
     def _build_recon_threshold(self, logit, output_prob):
@@ -249,8 +254,6 @@ class Beta_VAE_Discrim():
 
                 self.latent_loss_s = tf.reduce_mean(
                     tf.reduce_sum(latent_loss_raw_s, axis=1))
-
-            # 여기에 logit을 넣는게 아니라... recon된 거를 넣어야 함.
 
             with tf.variable_scope('discrim_loss'):
 
@@ -542,11 +545,13 @@ class Disentagled_VAE_FC_Discrim(Beta_VAE_Discrim):
 
                 print('enc : ', encoder_layer_list[-1].shape)
 
+        encoder_output_shape = encoder_layer_list[-1].shape.shape.as_list()[1]
+
         encoder_output = encoder_layer_list[-1]
-        return encoder_output
+        return encoder_output, encoder_output_shape
 
     def _build_decoder(self, layer_input, decoder_layer, beta_s,  
-                       input_dim):
+                       input_dim, encoder_output_shape):
 
         decoder_layer_list = list()
         decoder_layer_list.append(layer_input)
@@ -662,15 +667,17 @@ class Disentagled_VAE_CNN_Discrim(Beta_VAE_Discrim):
 
                 print('enc : ', encoder_layer_list[-1].shape)
 
+        encoder_output_shape = encoder_layer_list[-1].shape.as_list()[1]
 
         #last fully connected before latent variable creation
+
         layer_inputs = encoder_layer_list[-1]
         encoder_output = tf.contrib.layers.flatten(layer_inputs)
         print('encoder output :', encoder_output.shape)
-        return encoder_output
+        return encoder_output, encoder_output_shape
 
     def _build_decoder(self, layer_input, decoder_layer, beta_s, 
-                       input_dim):
+                       input_dim, encoder_output_shape):
 
         # decoder_layer.append(input_dim * input_dim)
         '''
@@ -693,16 +700,22 @@ class Disentagled_VAE_CNN_Discrim(Beta_VAE_Discrim):
           out_width  = input_width * col_stride
         return out_height, out_width        
         '''
-        layer_input_expand_dim = tf.expand_dims(tf.expand_dims(layer_input, 1), 1)
+
+
+        # layer_input_expand_dim = tf.expand_dims(tf.expand_dims(layer_input, 1), 1)
+
+        # layer_input_expand_dim = tf.expand_dims(layer_input, [1, 2])
+
+        # decoder_layer.append((layer_input.shape[-1], 1, 1))
+
         decoder_layer_list = list()
-        decoder_layer_list.append(layer_input_expand_dim)
-        print('decoder input :', layer_input_expand_dim.shape)
+        decoder_layer_list.append(layer_input)
+        print('decoder input :', layer_input.shape)
 
         # filter_size = layer_input.shape[-1]
-        output_size = 1
+
         for layer_num, layer_config in enumerate(decoder_layer):
             (num_filter, kernel_size, stride) = layer_config
-            output_size = output_size * stride
             with tf.variable_scope('layer_{}'.format(layer_num)):
                 layer_inputs = decoder_layer_list[-1]
                 if layer_num == len(decoder_layer) - 1:
@@ -714,11 +727,23 @@ class Disentagled_VAE_CNN_Discrim(Beta_VAE_Discrim):
                     normalizer_params = {'is_training' : self.is_training}
                     activation_fn = lambda x: tf.nn.leaky_relu(x, alpha=0.2)
 
-                layer_output = tf.contrib.layers.conv2d_transpose(
-                    layer_inputs, num_filter, kernel_size, stride,
-                    activation_fn=activation_fn,
-                    normalizer_fn=normalizer_fn,
-                    normalizer_params=normalizer_params)
+                if layer_num == 0:
+                    layer_output = tf.contrib.layers.fully_connected(
+                        layer_inputs, num_filter* encoder_output_shape * encoder_output_shape,
+                        activation_fn=lambda x:tf.nn.leaky_relu(x, alpha=0.2),
+                        normalizer_fn=normalizer_fn,
+                        normalizer_params=normalizer_params)
+                    layer_output = tf.reshape(layer_output, (-1, encoder_output_shape,
+                                                             encoder_output_shape,
+                                                             num_filter))
+                    output_size = encoder_output_shape
+                else:
+                    layer_output = tf.contrib.layers.conv2d_transpose(
+                        layer_inputs, num_filter, kernel_size, stride,
+                        activation_fn=activation_fn,
+                        normalizer_fn=normalizer_fn,
+                        normalizer_params=normalizer_params)
+                    output_size = output_size * stride
 
                 decoder_layer_list.append(layer_output)
 
